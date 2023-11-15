@@ -39,98 +39,117 @@ def checksum(string):
     return answer
 
 
-def receiveOnePing(icmpSocket, destinationAddress, ID, timeout):
-    # 1. 等待套接字接收回复
-    start_time = time.time()
-    what_ready = select.select([icmpSocket], [], [], timeout)
-    # 2. 如果接收到回复，则记录接收时间；否则，处理超时
-    if what_ready[0] == []:
-        return None
-    time_received = time.time()
-    # 3. 比较接收时间和发送时间，计算总网络延迟
-    total_time = time_received - start_time
-    # 4. 解包数据包头以获取有用信息，包括ID
-    packet_data = icmpSocket.recv(1024)
-    icmp_header = packet_data[20:28]
-    icmp_type, icmp_code, icmp_checksum, icmp_packet_id, icmp_sequence = struct.unpack("bbHHh", icmp_header)
-    # 5. 检查请求和回复之间的ID是否匹配
-    if icmp_packet_id != ID:
-        return None
-    # 6. 返回总网络延迟
-    return total_time * 1000
-
-
 def sendOnePing(icmpSocket, destinationAddress, ID):
-    # 1. 构建ICMP头
-    icmp_type = 8
-    icmp_code = 0
-    icmp_checksum = 0
-    icmp_packet_id = ID
-    icmp_sequence = 1
-    icmp_header = struct.pack("bbHHh", icmp_type, icmp_code, icmp_checksum, icmp_packet_id, icmp_sequence)
-    # 2. 计算校验和
-    icmp_checksum = checksum(icmp_header)
-    # 3. 将校验和插入数据包
-    icmp_header = struct.pack("bbHHh", icmp_type, icmp_code, icmp_checksum, icmp_packet_id, icmp_sequence)
-    # 4. 使用套接字发送数据包
-    icmp_packet = icmp_header + b"Hello, World!"
-    icmpSocket.sendto(icmp_packet, (destinationAddress, 80))
-    # 5. 记录发送时间
-    time_sent = time.time()
-    return time_sent
+    # 1. Build ICMP header
+    # 2. Checksum ICMP packet using given function
+    # 3. Insert checksum into packet
+    # 4. Send packet using socket
+    # 5. Record time of sending
+
+    # Build the ICMP header
+    myChecksum = 0
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
+    data = struct.pack("d", time.time())
+
+    # Calculate the checksum on the data and the header
+    myChecksum = checksum(header + data)
+
+    # Insert the checksum into the header
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, socket.htons(myChecksum), ID, 1)
+
+    # Send the packet using the socket
+    icmpSocket.sendto(header + data, (destinationAddress, 1))
+
+    # Record the time of sending
+    timeSent = time.time()
+
+    return timeSent
+
+
+def receiveOnePing(icmpSocket, destinationAddress, ID, timeout, timeSent):
+    # 1. Wait for the socket to receive a reply
+    # 2. Once received, record time of receipt, otherwise, handle a timeout
+    # 3. Compare the time of receipt to time of sending, producing the total network delay
+    # 4. Unpack the packet header for useful information, including the ID
+    # 5. Check that the ID matches between the request and reply
+    # 6. Return total network delay
+
+    timeLeft = timeout
+    while True:
+        startedSelect = time.time()
+        whatReady = select.select([icmpSocket], [], [], timeLeft)
+        howLongInSelect = (time.time() - startedSelect)
+        if whatReady[0] == []:  # Timeout
+            return -1
+
+        timeReceived = time.time()
+        recPacket, addr = icmpSocket.recvfrom(1024)
+
+        # Fetch the ICMP header from the IP packet
+        icmpHeader = recPacket[20:28]
+
+        # Unpack the header to extract the type, code, checksum, and ID
+        icmpType, code, checksum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
+
+        # Check that the ID matches between the request and reply
+        if packetID == ID:
+            # Calculate the total network delay
+            delay = timeReceived - timeSent
+            return delay
+
+        timeLeft = timeLeft - howLongInSelect
+        if timeLeft <= 0:
+            return -1
 
 
 def doOnePing(destinationAddress, timeout):
-    # 1. 创建ICMP套接字
-    icmp_socket = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.getprotobyname("icmp"))
-    # 2. 调用sendOnePing函数
-    packet_id = os.getpid() & 0xFFFF
-    send_time = sendOnePing(icmp_socket, destinationAddress, packet_id)
-    # 3. 调用receiveOnePing函数
-    total_delay = receiveOnePing(icmp_socket, packet_id, timeout, send_time)
-    # 4. 关闭ICMP套接字
-    icmp_socket.close()
-    # 5. 返回总网络延迟
-    return total_delay
+    # 1. Create ICMP socket
+    # 2. Call sendOnePing function
+    # 3. Call receiveOnePing function
+    # 4. Close ICMP socket
+    # 5. Return total network delay
+
+    # Create the ICMP socket
+    icmp = socket.getprotobyname("icmp")
+    icmpSocket = socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp)
+
+    # Generate a unique ID for the ICMP packet
+    ID = os.getpid() & 0xFFFF
+
+    # Call the sendOnePing function
+    timeSent = sendOnePing(icmpSocket, destinationAddress, ID)
+
+    # Call the receiveOnePing function
+    delay = receiveOnePing(icmpSocket, destinationAddress, ID, timeout, timeSent)
+
+    # Close the ICMP socket
+    icmpSocket.close()
+
+    # Return the total network delay
+    return delay
 
 
 def ping(host, timeout=1):
-    # 1. 解析主机名，将其解析为IP地址
-    try:
-        dest_ip = socket.gethostbyname(host)
-    except socket.gaierror:
-        print("Invalid hostname")
-        return
-    # 2. 循环调用doOnePing函数，打印返回的延迟时间
-    count = 0
-    received = 0
-    lost = 0
-    min_time = float('inf')
-    max_time = 0
-    sum_time = 0
-    while count < 10:
-        count += 1
-        delay = doOnePing(dest_ip, timeout)
-        if delay == None:
+    # 1. Look up hostname, resolving it to an IP address
+    # 2. Call doOnePing function, approximately every second
+    # 3. Print out the returned delay
+    # 4. Continue this process until stopped
+
+    # Look up the hostname and resolve it to an IP address
+    destAddr = socket.gethostbyname(host)
+
+    # Print out the destination address
+    print("Ping " + host + " (" + destAddr + ") using Python:")
+
+    # Ping approximately every second
+    while True:
+        delay = doOnePing(destAddr, timeout)
+        if delay == -1:
             print("Request timed out.")
-            lost += 1
         else:
-            print("Reply from {}: time={}ms".format(dest_ip, int(delay)))
-            received += 1
-            sum_time += delay
-            if delay < min_time:
-                min_time = delay
-            if delay > max_time:
-                max_time = delay
-    # 4. 统计发送、接收、丢失的数据包数量，计算最大、最小、平均延迟时间，打印统计信息
-    print("Ping statistics for {}:".format(host))
-    print("\tPackets: Sent = {}, Received = {}, Lost = {}".format(count, received, lost))
-    if received > 0:
-        print("Approximate round trip times in milli-seconds:")
-        print("\tMinimum = {}ms, Maximum = {}ms, Average = {}ms".format(int(min_time), int(max_time), int(sum_time / received)))
-    else:
-        print("No packets received.")
+            print("Reply from " + destAddr + ": time=%.2fms" % (delay * 1000))
+
+        time.sleep(1)
 
 
 ping("lancaster.ac.uk")
-
