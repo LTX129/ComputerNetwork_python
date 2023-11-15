@@ -95,11 +95,41 @@ def doOnePing(destinationAddress, timeout):
 
 
 def ping(host, timeout=1):
-    # 1. Look up hostname, resolving it to an IP address
-    # 2. Call doOnePing function, approximately every second
-    # 3. Print out the returned delay
-    # 4. Continue this process until stopped
-    pass  # Remove/replace when function is complete
+    # 1. 解析主机名，将其解析为IP地址
+    try:
+        dest_ip = socket.gethostbyname(host)
+    except socket.gaierror:
+        print("Invalid hostname")
+        return
+    # 2. 循环调用doOnePing函数，打印返回的延迟时间
+    count = 0
+    received = 0
+    lost = 0
+    min_time = float('inf')
+    max_time = 0
+    sum_time = 0
+    while count < 10:
+        count += 1
+        delay = doOnePing(dest_ip, timeout)
+        if delay == None:
+            print("Request timed out.")
+            lost += 1
+        else:
+            print("Reply from {}: time={}ms".format(dest_ip, int(delay)))
+            received += 1
+            sum_time += delay
+            if delay < min_time:
+                min_time = delay
+            if delay > max_time:
+                max_time = delay
+    # 4. 统计发送、接收、丢失的数据包数量，计算最大、最小、平均延迟时间，打印统计信息
+    print("Ping statistics for {}:".format(host))
+    print("\tPackets: Sent = {}, Received = {}, Lost = {}".format(count, received, lost))
+    if received > 0:
+        print("Approximate round trip times in milli-seconds:")
+        print("\tMinimum = {}ms, Maximum = {}ms, Average = {}ms".format(int(min_time), int(max_time), int(sum_time / received)))
+    else:
+        print("No packets received.")
 
 
 ping("lancaster.ac.uk")
