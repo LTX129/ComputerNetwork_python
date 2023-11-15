@@ -61,21 +61,37 @@ def receiveOnePing(icmpSocket, destinationAddress, ID, timeout):
 
 
 def sendOnePing(icmpSocket, destinationAddress, ID):
-    # 1. Build ICMP header
-    # 2. Checksum ICMP packet using given function
-    # 3. Insert checksum into packet
-    # 4. Send packet using socket
-    #  5. Record time of sending
-    pass  # Remove/replace when function is complete
+    # 1. 构建ICMP头
+    icmp_type = 8
+    icmp_code = 0
+    icmp_checksum = 0
+    icmp_packet_id = ID
+    icmp_sequence = 1
+    icmp_header = struct.pack("bbHHh", icmp_type, icmp_code, icmp_checksum, icmp_packet_id, icmp_sequence)
+    # 2. 计算校验和
+    icmp_checksum = checksum(icmp_header)
+    # 3. 将校验和插入数据包
+    icmp_header = struct.pack("bbHHh", icmp_type, icmp_code, icmp_checksum, icmp_packet_id, icmp_sequence)
+    # 4. 使用套接字发送数据包
+    icmp_packet = icmp_header + b"Hello, World!"
+    icmpSocket.sendto(icmp_packet, (destinationAddress, 80))
+    # 5. 记录发送时间
+    time_sent = time.time()
+    return time_sent
 
 
 def doOnePing(destinationAddress, timeout):
-    # 1. Create ICMP socket
-    # 2. Call sendOnePing function
-    # 3. Call receiveOnePing function
-    # 4. Close ICMP socket
-    # 5. Return total network delay
-    pass  # Remove/replace when function is complete
+    # 1. 创建ICMP套接字
+    icmp_socket = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.getprotobyname("icmp"))
+    # 2. 调用sendOnePing函数
+    packet_id = os.getpid() & 0xFFFF
+    send_time = sendOnePing(icmp_socket, destinationAddress, packet_id)
+    # 3. 调用receiveOnePing函数
+    total_delay = receiveOnePing(icmp_socket, packet_id, timeout, send_time)
+    # 4. 关闭ICMP套接字
+    icmp_socket.close()
+    # 5. 返回总网络延迟
+    return total_delay
 
 
 def ping(host, timeout=1):
