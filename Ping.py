@@ -40,13 +40,24 @@ def checksum(string):
 
 
 def receiveOnePing(icmpSocket, destinationAddress, ID, timeout):
-    # 1. Wait for the socket to receive a reply
-    # 2. Once received, record time of receipt, otherwise, handle a timeout
-    # 3. Compare the time of receipt to time of sending, producing the total network delay
-    # 4. Unpack the packet header for useful information, including the ID
-    # 5. Check that the ID matches between the request and reply
-    # 6. Return total network delay
-    pass  # Remove/replace when function is complete
+    # 1. 等待套接字接收回复
+    start_time = time.time()
+    what_ready = select.select([icmpSocket], [], [], timeout)
+    # 2. 如果接收到回复，则记录接收时间；否则，处理超时
+    if what_ready[0] == []:
+        return None
+    time_received = time.time()
+    # 3. 比较接收时间和发送时间，计算总网络延迟
+    total_time = time_received - start_time
+    # 4. 解包数据包头以获取有用信息，包括ID
+    packet_data = icmpSocket.recv(1024)
+    icmp_header = packet_data[20:28]
+    icmp_type, icmp_code, icmp_checksum, icmp_packet_id, icmp_sequence = struct.unpack("bbHHh", icmp_header)
+    # 5. 检查请求和回复之间的ID是否匹配
+    if icmp_packet_id != ID:
+        return None
+    # 6. 返回总网络延迟
+    return total_time * 1000
 
 
 def sendOnePing(icmpSocket, destinationAddress, ID):
