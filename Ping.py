@@ -52,7 +52,7 @@ def receiveOnePing(icmpSocket, destinationAddress, ID, timeout, timeSent, dataSi
         startedSelect = time.time()
         whatReady = select.select([icmpSocket], [], [], timeLeft)
         howLongInSelect = (time.time() - startedSelect)
-        if not whatReady[0]:  # Timeout
+        if whatReady[0] == []:  # Timeout
             return -1, 0, 0
 
         timeReceived = time.time()
@@ -180,4 +180,4 @@ def ping(host, timeout=1,count= 4, dataSize=64):
         minDelay * 1000, maxDelay * 1000, avgDelay * 1000))
 
 
-ping("lancaster.ac.uk")
+ping("www.bilibili.com")
