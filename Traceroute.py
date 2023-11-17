@@ -40,7 +40,7 @@ def traceroute(dest_name, max_hops=30, timeout=1):
     for ttl in range(1, max_hops + 1):
         with socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp) as send_sock:
             # 设置 TTL
-            send_sock.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, struct.pack('I',ttl))
+            send_sock.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, struct.pack('I', ttl))
 
             # 创建 ICMP echo 请求的头部和数据
             my_checksum = 0
@@ -51,7 +51,7 @@ def traceroute(dest_name, max_hops=30, timeout=1):
             header = struct.pack('!BBHHH', ICMP_ECHO_REQUEST, 0, my_checksum, packet_id, 1)
             packet = header + data
 
-            send_sock.sendto(packet, (dest_addr, 1))
+            send_sock.sendto(packet, (dest_addr, 521))
 
             start_time = time.time()
             while True:
@@ -73,4 +73,4 @@ def traceroute(dest_name, max_hops=30, timeout=1):
                     print(f'{ttl}\t{addr[0]}\t{(time_received - start_time) * 1000:.2f} ms')
                     return
 
-traceroute("www.baidu.com")
+traceroute('lancaster.ac.uk')

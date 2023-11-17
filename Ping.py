@@ -180,4 +180,4 @@ def ping(host, timeout=1,count= 4, dataSize=64):
         minDelay * 1000, maxDelay * 1000, avgDelay * 1000))
 
 
-ping("www.bilibili.com")
+ping("lancaster.ac.uk")
