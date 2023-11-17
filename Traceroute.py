@@ -1,12 +1,13 @@
-import socket
 import os
+import sys
+import socket
 import struct
-import time
 import select
+import time
 
 ICMP_ECHO_REQUEST = 8  # ICMP type code for echo request messages
 ICMP_ECHO_REPLY = 0  # ICMP type code for echo reply messages
-# 使用您提供的 checksum 函数
+# Provided checksum function from the coursework material
 def checksum(string):
     csum = 0
     countTo = (len(string) // 2) * 2
@@ -32,45 +33,63 @@ def checksum(string):
 
     return answer
 
-def traceroute(dest_name, max_hops=30, timeout=1):
-    dest_addr = socket.gethostbyname(dest_name)
-    print(f'Traceroute to {dest_name} ({dest_addr})')
+def create_packet(id):
+    """
+    Create a new echo request packet based on the given "id".
+    """
+    header = struct.pack('bbHHh', 8, 0, 0, id, 1)
+    data = 192 * 'Q'
+    my_checksum = checksum(header + data.encode('utf-8'))
+    header = struct.pack('bbHHh', 8, 0, my_checksum, id, 1)
+    return header + data.encode('utf-8')
 
-    icmp = socket.getprotobyname('icmp')
-    for ttl in range(1, max_hops + 1):
-        with socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp) as send_sock:
-            # 设置 TTL
-            send_sock.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, struct.pack('I', ttl))
+def traceroute(host, max_hops=30, timeout=2):
+    """trace
+    Run the traceroute to the given destination address (dest_addr).
+    """
+    dest_addr = socket.gethostbyname(host)
+    icmp_proto = socket.getprotobyname('icmp')
+    ttl = 1
+    print(f"通过最多 {max_hops} 个跃点跟踪")
+    # print(f"到 {dest_addr} 的路由:\n")
+    print("到 " + host + " (" + dest_addr + ") 的路由 using Python:")
 
-            # 创建 ICMP echo 请求的头部和数据
-            my_checksum = 0
-            packet_id = os.getpid() & 0xFFFF
-            header = struct.pack('!BBHHH', ICMP_ECHO_REQUEST, 0, my_checksum, packet_id, 1)
-            data = struct.pack('!d', time.time())
-            my_checksum = checksum(header + data)
-            header = struct.pack('!BBHHH', ICMP_ECHO_REQUEST, 0, my_checksum, packet_id, 1)
-            packet = header + data
 
-            send_sock.sendto(packet, (dest_addr, 521))
+    while True:
+        recv_socket = socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp_proto)
+        send_socket = socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp_proto)
 
-            start_time = time.time()
-            while True:
-                ready = select.select([send_sock], [], [], timeout)
-                if ready[0] == []:
-                    print(f'{ttl}\t*')
-                    break
+        send_socket.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, struct.pack('I', ttl))
+        # Timeout for the socket to wait for a reply
+        recv_socket.settimeout(timeout)
+        recv_socket.bind(("", 0))
 
-                time_received = time.time()
-                rec_packet, addr = send_sock.recvfrom(1024)
+        id = os.getpid() & 0xFFFF
 
-                icmp_header = rec_packet[20:28]
-                icmp_type, _, _, _, _ = struct.unpack('!BBHHH', icmp_header)
+        packet = create_packet(id)
+        send_socket.sendto(packet, (dest_addr, 1))
 
-                if icmp_type == 11:  # Time Exceeded
-                    print(f'{ttl}\t{addr[0]}\t{(time_received - start_time) * 1000:.2f} ms')
-                    break
-                elif icmp_type == 0:  # Echo Reply
-                    print(f'{ttl}\t{addr[0]}\t{(time_received - start_time) * 1000:.2f} ms')
-                    return
+        try:
+            started_select = time.time()
+            what_ready = select.select([recv_socket], [], [], timeout)
+            how_long_in_select = (time.time() - started_select)
+            if what_ready[0] == []:  # Timeout
+                print(f"{ttl:4}   *        *        *     请求超时。")
+            recv_packet, addr = recv_socket.recvfrom(1024)
+            time_received = time.time()
+            time_passed = round((time_received - started_select) * 1000)
+            print(f"{ttl:4}  {time_passed} ms    {time_passed} ms    {time_passed} ms  {addr[0]}")
+        except socket.timeout:  # No reply within timeout
+            print(f"{ttl:4}   *        *        *     请求超时。")
+        finally:
+            send_socket.close()
+            recv_socket.close()
 
-traceroute('lancaster.ac.uk')
+        ttl += 1
+        if addr[0] == socket.gethostbyname(dest_addr) or ttl > max_hops:
+            break
+
+    print("\n跟踪完成。")
+
+# Example usage
+traceroute("lancaster.ac.uk")
