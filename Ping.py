@@ -92,17 +92,17 @@ def sendOnePing(icmpSocket, destinationAddress, ID, dataSize):
 
     # Build the ICMP header
     myChecksum = 0
-    header = struct.pack("!bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 0)
-    data = struct.pack("!d", time.time()) + b"#" * (dataSize - 8)
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
+    data = struct.pack("d", time.time()) + b"#" * (dataSize - 8)
 
     # Calculate the checksum on the data and the header
     myChecksum = checksum(header + data)
 
     # Insert the checksum into the header
-    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, socket.htons(myChecksum), ID, 1)
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
 
     # Send the packet using the socket
-    icmpSocket.sendto(header + data, (destinationAddress, 1))
+    icmpSocket.sendto(header + data, (destinationAddress, 80))
 
     # Record the time of sending
     timeSent = time.time()
@@ -114,17 +114,18 @@ def doOnePing(destinationAddress, timeout, dataSize):
     # 1. Create ICMP socket
     icmp = socket.getprotobyname('icmp')
     icmp_Socket = socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp)
+    ID = os.getpid();
     # 2. Call sendOnePing function
-    timeSent = sendOnePing(icmp_Socket, destinationAddress, 0, dataSize)
+    timeSent = sendOnePing(icmp_Socket, destinationAddress, ID, dataSize)
     # 3. Call receiveOnePing function
-    delay, ipTTL, dataSize = receiveOnePing(icmp_Socket, destinationAddress, 0, timeout, timeSent, dataSize)
+    delay, ipTTL, dataSize = receiveOnePing(icmp_Socket, destinationAddress, ID, timeout, timeSent, dataSize)
     # 4. Close ICMP socket
     icmp_Socket.close()
     # 5. Return total network delay
-    return  delay, ipTTL, dataSize
+    return delay, ipTTL, dataSize
 
 
-def ping(host, timeout=1, count=4, dataSize=64):
+def ping(host, timeout=1,count= 4, dataSize=64):
     # 1. Look up hostname, resolving it to an IP address
     # 2. Call doOnePing function, approximately every second
     # 3. Print out the returned delay, TTL, and data size
