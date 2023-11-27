@@ -43,7 +43,7 @@ def create_packet(id):
     header = struct.pack('bbHHh', 8, 0, my_checksum, id, 1)
     return header + data.encode('utf-8')
 
-def traceroute(host, max_hops=30, timeout=2):
+def traceroute(host, max_hops=50, timeout=2):
     """trace
     Run the traceroute to the given destination address (dest_addr).
     """
