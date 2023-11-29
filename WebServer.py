@@ -58,4 +58,4 @@ def startServer(serverAddress, serverPort):
         serverSocket.close()
 
 
-startServer("", 8000)
+startServer("", 1314)
