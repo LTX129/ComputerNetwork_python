@@ -62,30 +62,9 @@ def sendOnePing(send_socket, dest_addr, ID):
     send_socket.sendto(packet, (dest_addr, 1))
 
 
-def receiveOnePing(recv_socket, ID, timeout, ttl):
-    """
-    Receive the ping from the socket.
-    """
-    # Timeout for the socket to wait for a reply
-    recv_socket.settimeout(timeout)
-
-    try:
-        started_select = time.time()
-        what_ready = select.select([recv_socket], [], [], timeout)
-        how_long_in_select = (time.time() - started_select)
-        if what_ready[0] == []:  # Timeout
-            return ttl, None, '*'
-        recv_packet, addr = recv_socket.recvfrom(1024)
-        icmpHeader = recv_packet[20:28]
-
-        return ttl, addr[0], how_long_in_select
-    except socket.timeout:
-        return ttl, None, '*'
-
-
 def doOnePing(dest_addr, ttl, timeout):
     """
-    Perform one ping operation and return three time measurements.
+    Perform three ping operations and return the time measurements.
     """
     icmp_proto = socket.getprotobyname('icmp')
     delays = []
@@ -96,15 +75,34 @@ def doOnePing(dest_addr, ttl, timeout):
             recv_socket.bind(("", 0))
 
             ID = os.getpid() & 0xFFFF
-
             sendOnePing(send_socket, dest_addr, ID)
-            ttl, addr, time_passed = receiveOnePing(recv_socket, ID, timeout, ttl)
-            delays.append(time_passed if addr else None)
+            recv_socket.settimeout(timeout)
 
-    return ttl, addr, delays
+            try:
+                started_select = time.time()
+                what_ready = select.select([recv_socket], [], [], timeout)
+                if what_ready[0] == []:  # Timeout
+                    delays.append('*')
+                    continue
+                recv_packet, addr = recv_socket.recvfrom(1024)
+                time_received = time.time()
+                bytes = struct.calcsize("d")
+                t = struct.unpack("d",recv_packet[28:28 +bytes]);
+                icmpHeader = recv_packet[20:28]
+                icmpType, _, _, packetID, _ = struct.unpack("bbHHh", icmpHeader)
 
+                if packetID == ID or (icmpType == 11 or icmpType == 3):
+                    delays.append(f"{(time_received - started_select) * 1000:.0f} ms")
+                elif packetID == ID or icmpType == 0:
+                    delays.append(f"{(time_received - t) * 1000:.0f} ms")
+                else:
+                    delays.append('*')
+            except socket.timeout:
+                delays.append('*')
 
-def traceroute(host, max_hops=40, timeout=3):
+    return ttl, addr[0] if 'addr' in locals() and addr else None, delays
+
+def traceroute(host, max_hops=30, timeout=3):
     """
     Run the traceroute to the given host.
     """
@@ -113,14 +111,13 @@ def traceroute(host, max_hops=40, timeout=3):
 
     for ttl in range(1, max_hops + 1):
         ttl, addr, delays = doOnePing(dest_addr, ttl, timeout)
-        delay_strs = ['*' if delay is None else f"{delay * 1000:.0f} ms" for delay in delays]
-        print(f"{ttl:3}   {'    '.join(delay_strs)}  {addr if addr else '请求超时。'}")
+        delay_strs = ' '.join(delays)
+        print(f"{ttl:2}   {delay_strs}  {addr if addr else '请求超时。'}")
 
         if addr == dest_addr:
             break
 
     print("\n跟踪完成。")
 
-
 # Example usage
-traceroute("www.zhihu.com")
+traceroute("lancaster.ac.uk")
