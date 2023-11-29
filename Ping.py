@@ -34,8 +34,6 @@ def checksum(string):
     answer = answer & 0xffff
     answer = answer >> 8 | (answer << 8 & 0xff00)
 
-    answer = socket.htons(answer)
-
     return answer
 
 
@@ -75,12 +73,12 @@ def receiveOnePing(icmpSocket, destinationAddress, ID, timeout, timeSent, dataSi
 
             # Extract the data size from the ICMP packet
             dataSize = len(recPacket) - 28
-
+            timeLeft = timeLeft - howLongInSelect
+            if delay > timeout:
+                return -1, 0, 0
             return delay, ipTTL, dataSize
 
-        timeLeft = timeLeft - howLongInSelect
-        if timeLeft <= 0:
-            return -1, 0, 0
+
 
 
 def sendOnePing(icmpSocket, destinationAddress, ID, dataSize):
@@ -97,6 +95,10 @@ def sendOnePing(icmpSocket, destinationAddress, ID, dataSize):
 
     # Calculate the checksum on the data and the header
     myChecksum = checksum(header + data)
+    if sys.platform == 'darwin':
+        myChecksum = socket.htons(myChecksum) & 0xffff  # 针对MacOS
+    else:
+        myChecksum = socket.htons(myChecksum)  # 针对其他平台
 
     # Insert the checksum into the header
     header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
@@ -180,4 +182,4 @@ def ping(host, timeout=1,count= 4, dataSize=64):
         minDelay * 1000, maxDelay * 1000, avgDelay * 1000))
 
 
-ping("lancaster.ac.uk")
+ping("www.zhihu.com")
