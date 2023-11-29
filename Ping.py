@@ -63,7 +63,7 @@ def receiveOnePing(icmpSocket, destinationAddress, ID, timeout, timeSent, dataSi
         icmpType, code, checksum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
 
         # Check that the ID matches between the request and reply
-        if packetID == ID:
+        if packetID == ID and icmpType == 0:
             # Calculate the total network delay
             delay = timeReceived - timeSent
 
