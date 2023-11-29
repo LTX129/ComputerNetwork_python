@@ -1,61 +1,51 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
 
 import socket
-import sys
+import os
 
+def create_server_socket(addr,port):
+    # Create a socket and bind to the specified port
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind((addr, port))
+    server_socket.listen(1)
+    print(f"Web server running on port {addr} {port}")
+    return server_socket
 
-def handleRequest(tcpSocket):
-    # 1. Receive request message from the client on connection socket
-    request = tcpSocket.recv(1024).decode()
+def handle_request(client_socket):
+    # Handle the incoming client request
+    request = client_socket.recv(1024).decode()
+    filename = extract_file_name(request)
 
-    # 2. Extract the path of the requested object from the message (second part of the HTTP header)
-    path = request.split()[1]
+    if filename:
+        try:
+            with open(filename, 'rb') as file:
+                response = 'HTTP/1.1 200 OK\n\n'.encode() + file.read()
+        except FileNotFoundError:
+            response = 'HTTP/1.1 404 Not Found\n\nFile not found'.encode()
+    else:
+        response = 'HTTP/1.1 400 Bad Request\n\n'.encode()
 
-    # 3. Read the corresponding file from disk
+    client_socket.sendall(response)
+    client_socket.close()
+
+def extract_file_name(request):
+    # Extract the file name from the HTTP GET request
+    lines = request.splitlines()
+    if lines:
+        first_line = lines[0]
+        parts = first_line.split()
+        if len(parts) > 1 and parts[0] == 'GET':
+            return parts[1].strip('/')
+
+def startServer(serveraddr, port):
     try:
-        with open(path[1:], 'rb') as file:
-            content = file.read()
-    except FileNotFoundError:
-        # 5. Send the correct HTTP response error
-        response = "HTTP/1.1 404 Not Found\r\n\r\n"
-        tcpSocket.sendall(response.encode())
-        tcpSocket.close()
-        return
-
-    # 4. Store in temporary buffer
-    # 6. Send the content of the file to the socket
-    response = "HTTP/1.1 200 OK\r\n\r\n"
-    tcpSocket.sendall(response.encode())
-    tcpSocket.sendall(content)
-
-    # 7. Close the connection socket
-    tcpSocket.close()
-
-
-def startServer(serverAddress, serverPort):
-    # 1. Create server socket
-    serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    try:
-        # 2. Bind the server socket to server address and server port
-        serverSocket.bind((serverAddress, serverPort))
-
-        # 3. Continuously listen for connections to server socket
-        serverSocket.listen(1)
-        print(f"Server listening on {serverAddress}:{serverPort}")
-
+        server_socket = create_server_socket(serveraddr, port)
         while True:
-            # 4. When a connection is accepted, call handleRequest function, passing new connection socket
-            connectionSocket, addr = serverSocket.accept()
+            client_socket, addr= server_socket.accept()
             print(f"Connection accepted from {addr[0]}:{addr[1]}")
-            handleRequest(connectionSocket)
-
+            handle_request(client_socket)
     except KeyboardInterrupt:
-        print("Server stopped.")
+        print("Shutting down the server.")
     finally:
-        # 5. Close server socket
-        serverSocket.close()
-
+        server_socket.close()
 
 startServer("", 1314)
