@@ -87,7 +87,7 @@ def doOnePing(dest_addr, ttl, timeout):
                 recv_packet, addr = recv_socket.recvfrom(1024)
                 time_received = time.time()
                 bytes = struct.calcsize("d")
-                t = struct.unpack("d",recv_packet[28:28 +bytes]);
+                t = struct.unpack("d",recv_packet[28:28 +bytes])[0]
                 icmpHeader = recv_packet[20:28]
                 icmpType, _, _, packetID, _ = struct.unpack("bbHHh", icmpHeader)
 
@@ -120,4 +120,4 @@ def traceroute(host, max_hops=30, timeout=3):
     print("\n跟踪完成。")
 
 # Example usage
-traceroute("lancaster.ac.uk")
+traceroute("www.baidu.com")
