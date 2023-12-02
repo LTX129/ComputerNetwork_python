@@ -1,4 +1,3 @@
-
 import socket
 import os
 
@@ -7,12 +6,13 @@ def create_server_socket(addr,port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((addr, port))
     server_socket.listen(1)
-    print(f"Web server running on port {addr} {port}")
+    print(f"Web server running on port {port}")
     return server_socket
 
-def handle_request(client_socket):
+def handle_request(client_socket, addr):
     # Handle the incoming client request
     request = client_socket.recv(1024).decode()
+    print(f"request line: {request.splitlines()[0]}")
     filename = extract_file_name(request)
 
     if filename:
@@ -25,6 +25,7 @@ def handle_request(client_socket):
         response = 'HTTP/1.1 400 Bad Request\n\n'.encode()
 
     client_socket.sendall(response)
+    print("client close")
     client_socket.close()
 
 def extract_file_name(request):
@@ -40,9 +41,10 @@ def startServer(serveraddr, port):
     try:
         server_socket = create_server_socket(serveraddr, port)
         while True:
-            client_socket, addr= server_socket.accept()
+            client_socket, addr = server_socket.accept()
+            print(f"one connection is established and it's address is: {addr}")
             print(f"Connection accepted from {addr[0]}:{addr[1]}")
-            handle_request(client_socket)
+            handle_request(client_socket, addr)
     except KeyboardInterrupt:
         print("Shutting down the server.")
     finally:
