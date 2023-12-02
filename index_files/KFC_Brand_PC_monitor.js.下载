@@ -1,0 +1,311 @@
+
+$(document).ready(function(){
+
+    // nav
+
+    $(".navul li:eq(0)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '均衡饮食_导航', 'wt.msg', '均衡饮食_导航');
+            _hmt.push(["_trackEvent", "均衡饮食_导航", "均衡饮食_导航"]);
+        }
+    })
+    $(".navul li:eq(1)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '网上订餐_导航', 'wt.msg', '网上订餐_导航');
+            _hmt.push(["_trackEvent", "网上订餐_导航", "网上订餐_导航"]);
+        }
+    })
+    $(".navul li:eq(2)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', 'APP下载_导航', 'wt.msg', 'APP下载_导航');
+            _hmt.push(["_trackEvent", "APP下载_导航", "APP下载_导航"]);
+        }
+    })
+    $(".navul li:eq(3)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '企业责任_导航', 'wt.msg', '企业责任_导航');
+            _hmt.push(["_trackEvent", "企业责任_导航", "企业责任_导航"]);
+        }
+    })
+    $(".navul li:eq(4)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '加入我们_导航', 'wt.msg', '加入我们_导航');
+            _hmt.push(["_trackEvent", "加入我们_导航", "加入我们_导航"]);
+        }
+    })
+    $(".navul li:eq(5)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '新闻中心_导航', 'wt.msg', '新闻中心_导航');
+            _hmt.push(["_trackEvent", "新闻中心_导航", "新闻中心_导航"]);
+        }
+    })
+    $(".navul li:eq(6)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '运动音乐_导航', 'wt.msg', '运动音乐_导航');
+            _hmt.push(["_trackEvent", "运动音乐_导航", "运动音乐_导航"]);
+        }
+    })
+    $(".navul li:eq(7)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '儿童乐园_导航', 'wt.msg', '儿童乐园_导航');
+            _hmt.push(["_trackEvent", "儿童乐园_导航", "儿童乐园_导航"]);
+        }
+    })
+    $(".navul li:eq(8)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '特许经营_导航', 'wt.msg', '特许经营_导航');
+            _hmt.push(["_trackEvent", "特许经营_导航", "特许经营_导航"]);
+        }
+    })
+    $(".navul li:eq(9)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '联系我们_导航', 'wt.msg', '联系我们_导航');
+            _hmt.push(["_trackEvent", "联系我们_导航", "联系我们_导航"]);
+        }
+    })
+
+
+
+    $(".kv .slideFrame ul li.slide:eq(4)").click(function(){ })
+
+
+// banner
+//
+    $(".kv .slideFrame ul li.slide:eq(0)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', 'Banner1', 'wt.msg', 'Banner1');
+            _hmt.push(["_trackEvent", "Banner1", "Banner1"]);
+        }
+    })
+    $(".kv .slideFrame ul li.slide:eq(1)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', 'Banner2', 'wt.msg', 'Banner2');
+            _hmt.push(["_trackEvent", "Banner2", "Banner2"]);
+        }
+    })
+    $(".kv .slideFrame ul li.slide:eq(2)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', 'Banner3', 'wt.msg', 'Banner3');
+            _hmt.push(["_trackEvent", "Banner3", "Banner3"]);
+        }
+    })
+    $(".kv .slideFrame ul li.slide:eq(3)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', 'Banner4', 'wt.msg', 'Banner4');
+            _hmt.push(["_trackEvent", "Banner4", "Banner4"]);
+        }
+    })
+    $(".kv .slideFrame ul li.slide:eq(4)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', 'Banner5', 'wt.msg', 'Banner5');
+            _hmt.push(["_trackEvent", "Banner5", "Banner5"]);
+        }
+    })
+
+
+// banner右侧
+//
+    $("#dp_01_2").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '网上订餐_右', 'wt.msg', '网上订餐_右');
+            _hmt.push(["_trackEvent", "网上订餐_右", "网上订餐_右"]);
+        }
+    })
+    $("#dp_02_2").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '自助点餐_右', 'wt.msg', '自助点餐_右');
+            _hmt.push(["_trackEvent", "自助点餐_右", "自助点餐_右"]);
+        }
+    })
+    $("#dp_03_2").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '早餐_右', 'wt.msg', '早餐_右');
+            _hmt.push(["_trackEvent", "早餐_右", "早餐_右"]);
+        }
+    })
+    $("#dp_04_2").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '午餐_右', 'wt.msg', '午餐_右');
+            _hmt.push(["_trackEvent", "午餐_右", "午餐_右"]);
+        }
+    })
+    $("#dp_05_2").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '下午茶_右', 'wt.msg', '下午茶_右');
+            _hmt.push(["_trackEvent", "下午茶_右", "下午茶_右"]);
+        }
+    })
+    $("#dp_06_2").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '晚餐_右', 'wt.msg', '晚餐_右');
+            _hmt.push(["_trackEvent", "晚餐_右", "晚餐_右"]);
+        }
+    })
+    $("#dp_07_2").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '夜宵_右', 'wt.msg', '夜宵_右');
+            _hmt.push(["_trackEvent", "夜宵_右", "夜宵_右"]);
+        }
+    })
+    $("#dp_08_2").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '甜品站_右', 'wt.msg', '甜品站_右');
+            _hmt.push(["_trackEvent", "甜品站_右", "甜品站_右"]);
+        }
+    })
+
+
+
+
+// 底部
+//
+    $(".blockInMain_2").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '宅急送网上订餐（含APP）', 'wt.msg', '宅急送网上订餐（含APP）');
+            _hmt.push(["_trackEvent", "宅急送网上订餐（含APP）", "宅急送网上订餐（含APP）"]);
+        }
+    })
+    $(".blockInMain_1:eq(0)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '新闻中心', 'wt.msg', '新闻中心');
+            _hmt.push(["_trackEvent", "新闻中心", "新闻中心"]);
+        }
+    })
+    $(".blockInMain_1:eq(1)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '超级APP', 'wt.msg', '超级APP');
+            _hmt.push(["_trackEvent", "超级APP", "超级APP"]);
+        }
+    })
+    $(".blockInMain_1:eq(2)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '宅急送_下载APP', 'wt.msg', '宅急送_下载APP');
+            _hmt.push(["_trackEvent", "宅急送_下载APP", "宅急送_下载APP"]);
+        }
+    })
+    $(".blockInMain_1:eq(3)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '儿童乐园', 'wt.msg', '儿童乐园');
+            _hmt.push(["_trackEvent", "儿童乐园", "儿童乐园"]);
+        }
+    })
+    $(".blockInMain_1:eq(4)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '天天运动', 'wt.msg', '天天运动');
+            _hmt.push(["_trackEvent", "天天运动", "天天运动"]);
+        }
+    })
+    $(".blockInMain_1:eq(5)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', 'k-music', 'wt.msg', 'k-music');
+            _hmt.push(["_trackEvent", "k", "music"]);
+        }
+    })
+    $(".blockInMain_1:eq(6)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '食品安全', 'wt.msg', '食品安全');
+            _hmt.push(["_trackEvent", "食品安全", "食品安全"]);
+        }
+    })
+    $(".blockInMain_1:eq(7)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '关注我们', 'wt.msg', '关注我们');
+            _hmt.push(["_trackEvent", "关注我们", "关注我们"]);
+        }
+    })
+    $(".blockInMain_1:eq(8)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '精彩下载', 'wt.msg', '精彩下载');
+            _hmt.push(["_trackEvent", "精彩下载", "精彩下载"]);
+        }
+    })
+    $(".blockInMain_1:eq(9)").click(function(){
+        if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '兄弟品牌', 'wt.msg', '兄弟品牌');
+            _hmt.push(["_trackEvent", "兄弟品牌", "兄弟品牌"]);
+        }
+    })
+
+
+
+    // 20180321
+    $(".edlogo").click(function(){
+         if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '东方既白_导航栏', 'wt.msg', '东方既白_导航栏');
+            _hmt.push(["_trackEvent", "东方既白_导航栏", "东方既白_导航栏"]);
+        }
+    })
+
+     $(".downld").click(function(){
+         if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '超级APP下载_悬浮窗', 'wt.msg', '超级APP下载_悬浮窗');
+            _hmt.push(["_trackEvent", "超级APP下载_悬浮窗", "超级APP下载_悬浮窗"]);
+        }
+    })
+
+     $(".t_mBlock td.link a:eq(0)").click(function(){
+         if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', 'App下载_底部栏', 'wt.msg', 'App下载_底部栏');
+            _hmt.push(["_trackEvent", "App下载_底部栏", "App下载_底部栏"]);
+        }
+     })
+     $(".t_mBlock td.link a:eq(1)").click(function(){
+         if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '网上订餐_底部栏', 'wt.msg', '网上订餐_底部栏');
+            _hmt.push(["_trackEvent", "网上订餐_底部栏", "网上订餐_底部栏"]);
+        }
+     })
+
+     $(".t_mBlock td.link a:eq(2)").click(function(){
+         if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '手机自助点餐_底部栏', 'wt.msg', '手机自助点餐_底部栏');
+            _hmt.push(["_trackEvent", "手机自助点餐_底部栏", "手机自助点餐_底部栏"]);
+        }
+     })
+
+     $(".t_mBlock td.link a:eq(3)").click(function(){
+         if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '新闻中心_底部栏', 'wt.msg', '新闻中心_底部栏');
+            _hmt.push(["_trackEvent", "新闻中心_底部栏", "新闻中心_底部栏"]);
+        }
+     })
+
+     $(".t_mBlock td.link a:eq(4)").click(function(){
+         if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '餐厅查询_底部栏', 'wt.msg', '餐厅查询_底部栏');
+            _hmt.push(["_trackEvent", "餐厅查询_底部栏", "餐厅查询_底部栏"]);
+        }
+     })
+
+     $(".t_mBlock td.link a:eq(5)").click(function(){
+         if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '供应商查询_底部栏', 'wt.msg', '供应商查询_底部栏');
+            _hmt.push(["_trackEvent", "供应商查询_底部栏", "供应商查询_底部栏"]);
+        }
+     })
+
+     $(".t_mBlock td.link a:eq(6)").click(function(){
+         if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '关注我们_底部栏', 'wt.msg', '关注我们_底部栏');
+            _hmt.push(["_trackEvent", "关注我们_底部栏", "关注我们_底部栏"]);
+        }
+     })
+
+     $(".t_mBlock td.link a:eq(7)").click(function(){
+         if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '分享_底部栏', 'wt.msg', '分享_底部栏');
+            _hmt.push(["_trackEvent", "分享_底部栏", "分享_底部栏"]);
+        }
+     })
+
+     $(".t_mBlock td.link a:eq(8)").click(function(){
+         if (window._tag) {
+            _tag.dcsMultiTrack('wt.event', '收藏_底部栏', 'wt.msg', '收藏_底部栏');
+            _hmt.push(["_trackEvent", "收藏_底部栏", "收藏_底部栏"]);
+        }
+     })
+
+
+});
+
+

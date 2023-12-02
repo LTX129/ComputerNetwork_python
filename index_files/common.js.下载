@@ -1,0 +1,892 @@
+﻿//图片预加载
+var dtype = 1;
+var image1 = new Image();
+image1.src = "images/btn/bnav01.jpg";
+var image2 = new Image();
+image2.src = "images/btn/bnav02.jpg";
+var image3 = new Image();
+image3.src = "images/btn/bnav03.jpg";
+var image4 = new Image();
+image4.src = "images/btn/bnav04.jpg";
+var image5 = new Image();
+image5.src = "images/btn/bnav05.jpg";
+var image6 = new Image();
+image6.src = "images/btn/bnav06.jpg";
+var image7 = new Image();
+image7.src = "images/btn/bnav111.jpg";
+var image8 = new Image();
+image8.src = "images/btn/bnav08.jpg";
+var image9 = new Image();
+image9.src = "images/btn/bnav09.jpg";
+var image10 = new Image();
+image10.src = "images/btn/bnav10.jpg";
+
+$(document).ready(function () {
+    
+    //daypart start
+    var timeAction1;
+    var timeAction2;
+    function resetdp() {
+        $('ul.dpul li.onepart').show();
+        $('ul.dpul li.twopart').hide();
+    }
+    $('ul.dpul li#dp_01_1 img').mouseover(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction1 = setTimeout("$('ul.dpul li#dp_01_2').show();$('ul.dpul li#dp_01_1').hide();$('ul.dpul li#dp_02_1').hide();", 250);
+    });
+    $('ul.dpul li#dp_01_2 img').mouseout(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeActio2n = setTimeout("$('ul.dpul li#dp_01_2').hide();$('ul.dpul li#dp_01_1').show();$('ul.dpul li#dp_02_1').show();", 100);
+    });
+    $('ul.dpul li#dp_02_1 img').mouseover(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction1 = setTimeout("$('ul.dpul li#dp_02_2').show();$('ul.dpul li#dp_01_1').hide();$('ul.dpul li#dp_02_1').hide();", 250);
+    });
+    $('ul.dpul li#dp_02_2 img').mouseout(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction2 = setTimeout("$('ul.dpul li#dp_02_2').hide();$('ul.dpul li#dp_01_1').show();$('ul.dpul li#dp_02_1').show();", 100);
+    });
+    $('ul.dpul li#dp_03_1 img').mouseover(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction1 = setTimeout("$('ul.dpul li#dp_03_2').show();$('ul.dpul li#dp_03_1').hide();$('ul.dpul li#dp_04_1').hide();", 250);
+    });
+    $('ul.dpul li#dp_03_2 img').mouseout(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction2 = setTimeout("$('ul.dpul li#dp_03_2').hide();$('ul.dpul li#dp_03_1').show();$('ul.dpul li#dp_04_1').show();", 100);
+    });
+    $('ul.dpul li#dp_04_1 img').mouseover(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction1 = setTimeout("$('ul.dpul li#dp_04_2').show();$('ul.dpul li#dp_03_1').hide();$('ul.dpul li#dp_04_1').hide();", 250);
+    });
+    $('ul.dpul li#dp_04_2 img').mouseout(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction2 = setTimeout("$('ul.dpul li#dp_04_2').hide();$('ul.dpul li#dp_03_1').show();$('ul.dpul li#dp_04_1').show();", 100);
+    });
+    $('ul.dpul li#dp_05_1 img').mouseover(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction1 = setTimeout("$('ul.dpul li#dp_05_2').show();$('ul.dpul li#dp_05_1').hide();$('ul.dpul li#dp_06_1').hide();", 250);
+    });
+    $('ul.dpul li#dp_05_2 img').mouseout(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction2 = setTimeout("$('ul.dpul li#dp_05_2').hide();$('ul.dpul li#dp_05_1').show();$('ul.dpul li#dp_06_1').show();", 100);
+    });
+    $('ul.dpul li#dp_06_1 img').mouseover(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction1 = setTimeout("$('ul.dpul li#dp_06_2').show();$('ul.dpul li#dp_05_1').hide();$('ul.dpul li#dp_06_1').hide();", 250);
+    });
+    $('ul.dpul li#dp_06_2 img').mouseout(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction2 = setTimeout("$('ul.dpul li#dp_06_2').hide();$('ul.dpul li#dp_05_1').show();$('ul.dpul li#dp_06_1').show();", 100);
+    });
+	//william 20120719 start
+	$('ul.dpul li#dp_07_1 img').mouseover(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction1 = setTimeout("$('ul.dpul li#dp_07_2').show();$('ul.dpul li#dp_07_1').hide();$('ul.dpul li#dp_08_1').hide();", 250);
+    });
+    $('ul.dpul li#dp_07_2 img').mouseout(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction2 = setTimeout("$('ul.dpul li#dp_07_2').hide();$('ul.dpul li#dp_07_1').show();$('ul.dpul li#dp_08_1').show();", 100);
+    });
+    $('ul.dpul li#dp_08_1 img').mouseover(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction1 = setTimeout("$('ul.dpul li#dp_08_2').show();$('ul.dpul li#dp_07_1').hide();$('ul.dpul li#dp_08_1').hide();", 250);
+    });
+    $('ul.dpul li#dp_08_2 img').mouseout(function () {
+        clearTimeout(timeAction1);
+        resetdp();
+        timeAction2 = setTimeout("$('ul.dpul li#dp_08_2').hide();$('ul.dpul li#dp_07_1').show();$('ul.dpul li#dp_08_1').show();", 100);
+    });
+	//william 20120719 end
+    $('.topNav').mouseover(function () {
+        resetdp();
+    });
+    $('.kv').mouseover(function () {
+        resetdp();
+    });
+    $('.announceBlock').mouseover(function () {
+        resetdp();
+    });
+    $('.mainBlock').mouseover(function () {
+        resetdp();
+    });
+    //daypart end
+
+
+    //底部其他网站
+    $('a.goToOtherWeb img').mouseover(function () {
+        $('a.goToOtherWeb img').attr('src', 'images/bg/otherWeb_bg2.jpg');
+        $('ul.otherLink').show();
+    }).mouseout(function () {
+        $('a.goToOtherWeb img').attr('src', 'images/bg/otherWeb_bg.jpg');
+        $('ul.otherLink').hide();
+    });
+    $('ul.otherLink').mouseover(function () {
+        $('a.goToOtherWeb img').attr('src', 'images/bg/otherWeb_bg2.jpg');
+        $(this).show();
+    }).mouseout(function () {
+        $('a.goToOtherWeb img').attr('src', 'images/bg/otherWeb_bg.jpg');
+        $(this).hide();
+    });
+
+    //nav二级导航
+    // $('a.nav_joinUs').mouseover(function () {
+    //     $('ul.subNav').show();
+    // }).mouseout(function () {
+    //     $('ul.subNav').hide();
+    // });
+
+    
+    $('ul.subNav').mouseover(function () {
+        $(this).show();
+    }).mouseout(function () {
+        $(this).hide();
+    });
+
+    //toolbar二级链接
+    $('a.toolbar_gzUs').mouseover(function () {
+        $('ul.gzUs').show();
+    }).mouseout(function () {
+        $('ul.gzUs').hide();
+    });
+    $('ul.gzUs').mouseover(function () {
+        $(this).show();
+    }).mouseout(function () {
+        $(this).hide();
+    });
+
+    $('a.shareBtn').mouseover(function () {
+        $('ul.share').show();
+    }).mouseout(function () {
+        $('ul.share').hide();
+    });
+    $('ul.share').mouseover(function () {
+        $(this).show();
+    }).mouseout(function () {
+        $(this).hide();
+    });
+
+    
+
+    //肯德基在中国
+    $(".anewstitle").click(function () {
+        if ($(this).attr("class") == "anewstitle") {
+            $(".anewstitle2").each(function () {
+                $(this).attr("class", "anewstitle");
+                $(this).parent().find(".anewscon").hide("slow");
+                $(this).find("img").attr("src", "images/btn/aj1.gif");
+            });
+
+            var sheight = $(this).attr("offsetop");
+            $(this).attr("class", "anewstitle2");
+            $(this).parent().find(".anewscon").show("slow", function () {
+                document.documentElement.scrollTop = sheight;
+            });
+            $(this).find("img").attr("src", "images/btn/aj2.gif");
+        }
+        else {
+            $(this).attr("class", "anewstitle");
+            $(this).parent().find(".anewscon").hide("slow");
+            $(this).find("img").attr("src", "images/btn/aj1.gif");
+        }
+    });
+
+    $(".anewscon .rdbtn").click(function () {
+        var anobj = $(this).parent().parent().find("img");
+        $(anobj).parent().attr("class", "anewstitle");
+        $(anobj).parent().parent().find(".anewscon").hide("slow");
+        $(anobj).attr("src", "images/btn/aj1.gif");
+    });
+
+    //24H
+    $(".list_24h ul").mouseover(function () {
+        $(this).addClass("ulover");
+    });
+    $(".list_24h ul").mouseout(function () {
+        $(this).removeClass("ulover");
+    });
+
+    //导航
+    $(".navul li a img").mouseover(function () {
+        var isrc = $(this).attr("src");
+        if (isrc.indexOf("/nav") != -1)
+            isrc = isrc.replace("/nav", "/bnav");
+        $(this).attr("src", isrc);
+    });
+
+    $(".navul li a img").mouseout(function () {
+        var isrc = $(this).attr("src");
+        if (isrc.indexOf("/bnav") != -1)
+            isrc = isrc.replace("/bnav", "/nav");
+        $(this).attr("src", isrc);
+    });
+
+    $('a.flashBtn').click(function () {
+        $('.flashBtn').show();
+        $(".close").show();
+		$("#flashContant").show();
+    });
+})
+
+
+function showFlashTVC(){  
+	if((navigator.userAgent.indexOf('iPhone') != -1)||(navigator.userAgent.indexOf('iPod') != -1)||(navigator.userAgent.indexOf('iPad') != -1))
+		{
+			if((navigator.userAgent.indexOf('5.0 Mobile') != -1)||(navigator.userAgent.indexOf('5.0.1 Mobile') != -1)||(navigator.userAgent.indexOf('5.0.2 Mobile') != -1)||(navigator.userAgent.indexOf('5.0.3 Mobile') != -1)||(navigator.userAgent.indexOf('5.0.4 Mobile') != -1)||(navigator.userAgent.indexOf('5.0.5 Mobile') != -1)||(navigator.userAgent.indexOf('4.0 Mobile') != -1)||(navigator.userAgent.indexOf('4.0.1 Mobile') != -1)||(navigator.userAgent.indexOf('4.0.2 Mobile') != -1)||(navigator.userAgent.indexOf('4.0.3 Mobile') != -1)||(navigator.userAgent.indexOf('4.0.4 Mobile') != -1)||(navigator.userAgent.indexOf('4.0.5 Mobile') != -1)||(navigator.userAgent.indexOf('4.1 Mobile') != -1))
+			{
+				$('.toolbar').css('position','absolute');
+				}
+		}
+	else{
+		this.getVideo = function(){
+				var htmlFCode = '<div id="flashContant"><div id="objectDiv">'
+				htmlFCode += '<object id="FlashID" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="290" height="218">'
+				htmlFCode += '<param name="movie" value="swf/index_tvc.swf" />'
+				htmlFCode += '<param name="quality" value="high" />'
+				htmlFCode += '<param name="wmode" value="transparent" />'
+				htmlFCode += '<!-- 此 param 标签提示使用 Flash Player 6.0 r65 和更高版本的用户下载最新版本的 Flash Player。如果您不想让用户看到该提示，请将其删除。 -->'
+				htmlFCode += '<param name="expressinstall" value="Scripts/expressInstall.swf" />'
+				htmlFCode += '<!-- 下一个对象标签用于非 IE 浏览器。所以使用 IECC 将其从 IE 隐藏。 -->'
+				htmlFCode += '<!--[if !IE]>-->'
+				htmlFCode += '<object type="application/x-shockwave-flash" data="swf/index_tvc.swf" width="290" height="218">'
+				htmlFCode += '<!--<![endif]-->'
+				htmlFCode += '<param name="quality" value="high" />'
+				htmlFCode += '<param name="wmode" value="transparent" />'
+				htmlFCode += '<param name="expressinstall" value="Scripts/expressInstall.swf" />'
+				htmlFCode += '<!-- 浏览器将以下替代内容显示给使用 Flash Player 6.0 和更低版本的用户。 -->'
+				htmlFCode += '<div><h4>此页面上的内容需要较新版本的 Adobe Flash Player。</h4><p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="获取 Adobe Flash Player" width="112" height="33" /></a></p></div>'
+				htmlFCode += '<!--[if !IE]>--></object><!--<![endif]--></object>'
+				htmlFCode += '<a href="javascript:;" class="closeTvc"><img src="images/btn/closeTvc.png" /></a>'
+				htmlFCode += '</div></div>'
+				return htmlFCode;
+				}
+			  var vhtml=this.getVideo();
+			  $('#flashContant').html(vhtml);
+			  setTimeout("$('#flashContant').show();",200);
+			  
+		$('a.closeTvc').click(function(){
+			$('#objectDiv').remove();
+			$('#flashContant').hide();
+			setTimeout("$('.flashBtn').show();",200);
+		});
+	}
+};
+
+function setToolbarBottm(){  
+	if((navigator.userAgent.indexOf('iPhone') != -1)||(navigator.userAgent.indexOf('iPod') != -1)||(navigator.userAgent.indexOf('iPad') != -1))
+		{
+			if((navigator.userAgent.indexOf('5.0 Mobile') != -1)||(navigator.userAgent.indexOf('5.0.1 Mobile') != -1)||(navigator.userAgent.indexOf('5.0.2 Mobile') != -1)||(navigator.userAgent.indexOf('5.0.3 Mobile') != -1)||(navigator.userAgent.indexOf('5.0.4 Mobile') != -1)||(navigator.userAgent.indexOf('5.0.5 Mobile') != -1)||(navigator.userAgent.indexOf('4.0 Mobile') != -1)||(navigator.userAgent.indexOf('4.0.1 Mobile') != -1)||(navigator.userAgent.indexOf('4.0.2 Mobile') != -1)||(navigator.userAgent.indexOf('4.0.3 Mobile') != -1)||(navigator.userAgent.indexOf('4.0.4 Mobile') != -1)||(navigator.userAgent.indexOf('4.0.5 Mobile') != -1)||(navigator.userAgent.indexOf('4.1 Mobile') != -1))
+			{
+				$('.toolbar').css('position','absolute');
+				}
+				
+		}
+};
+
+function closeTvc(){
+	$('#objectDiv').remove();
+	$('#flashContant').hide();
+	$('.flashBtn').show();
+	}
+
+//分享到人人
+function shareToRenren()
+{
+window.open('http://share.renren.com/share/buttonshare.do?title='+encodeURIComponent('肯德基官方网站')+'&link='+encodeURIComponent(location.href)+'&rcontent=');
+}
+//分享到开心网
+function shareToKaixin()
+{
+window.open('http://www.kaixin001.com/repaste/share.php?rtitle='+encodeURIComponent('肯德基官方网站')+'&rurl='+encodeURIComponent(location.href)+'&rcontent=');
+}
+//分享到新浪
+function shareToSina()
+{
+window.open('http://v.t.sina.com.cn/share/share.php?title='+encodeURIComponent('肯德基官方网站')+'&url='+encodeURIComponent(location.href)+'&rcontent=');
+}
+//分享到腾讯微博
+function shareToTqq()
+{
+window.open('http://v.t.qq.com/share/share.php?title='+encodeURIComponent('肯德基官方网站')+'&url='+encodeURIComponent(location.href)+'&rcontent=');
+}
+//分享到QQ空间
+function shareToQzone()
+{
+window.open('http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?title='+encodeURIComponent(document.title.substring(0,76))+'&url='+encodeURIComponent(location.href)+'&rcontent=');
+} 
+
+function scrollPic(){
+//============首页KV=================================		
+	  var currentSlide=0;
+	  var oldSlide=0;
+	  var slideCount=$('.slideList li').length;
+	  var slideWidth=$('.slideList li').innerWidth();
+	  $('.slideList').css('width',slideWidth*slideCount);
+	  $('.slideList img').css('border','none');
+	  $('a.slideNum').eq(0).addClass('current');
+	  var slideTimeout;
+	  
+	  var slideRotation = function(){
+		  oldSlide=currentSlide;
+		  currentSlide=(currentSlide+1)%slideCount;
+		  if(navigator.appVersion.match(/7./i)=='7.'){
+			  $('.slideList').css('left',-slideWidth*currentSlide);
+			  }
+			  else{
+				  $('.slideList').hide();
+				  $('.slideList').css('left',-slideWidth*currentSlide);
+				  $('.slideList').fadeIn();
+				  }
+		  $('a.slideNum').eq(oldSlide).removeClass('current');
+		  $('a.slideNum').eq(currentSlide).addClass('current');
+		  slideTimeout=setTimeout(slideRotation,5000);		
+		  };
+		  
+	  slideTimeout=setTimeout(slideRotation,5000);//启动轮转程序	
+
+//鼠标悬停
+	  $('.slideFrame').hover(
+		  function(){clearTimeout(slideTimeout);},//鼠标悬停时停止轮转
+		  function(){slideTimeout=setTimeout(slideRotation,5000);}//鼠标移开后重新开始轮转程序		
+		  );
+
+//鼠标点击 
+	  $('.slideController li').click(
+		  function(){
+			  clearTimeout(slideTimeout);
+			  $('a.slideNum').removeClass('current');//取消所有标有当前标记的控制数
+			  $(this).children().addClass('current');//添加当前标记给控制数
+			  var c_num=$('.slideController li').index(this);
+			  currentSlide=parseInt(c_num);
+			  oldSlide=currentSlide;
+			  $('.slideList').css('left',-slideWidth*currentSlide);
+			  }
+	  );	
+//========end 首页kv========
+}
+
+/*下载显示*/
+var curdname = "dsgg";
+var scrollSetting = false;
+var pageCount = 0;
+var d = "dsgg";
+var t = 2;
+var pageNum = 1;
+var $body = $("#downlist_" + d);
+function downshow(dname, typeid) {
+    scrollSetting = false;
+    pageNum = 1;
+    t = typeid;
+    d = dname;
+    $("#downlist_dsgg").html("");
+    $("#downlist_zmbz").html("");
+    $("#downlist_dzhk").html("");
+    $body = $("#downlist_" + d);
+    $body.height=0;
+    if (typeid == "1") { pageCount = 12 }
+    else { pageCount = 5 }
+
+    $("#left_btm").removeClass(curdname);
+    $("#left_btm").addClass(dname);
+    $("#downlist_" + curdname).hide('slow');
+    $("#downview_" + curdname).show('slow');
+    $("#downlist_" + dname).show('slow');
+    $("#downview_" + dname).hide('slow');
+    curdname = dname;
+    insertcode(1, t, d);
+
+    $(window).scroll(function () {
+        $body = $("#downlist_" + d);
+        setTimeout(function () {
+            var scr = window.innerHeight || $(window).height();
+            /*判断窗体高度与竖向滚动位移大小相加 是否 超过内容页高度*/
+            if ($(window).scrollTop() + scr >= $body.height()) {
+                if (scrollSetting) {
+                    scrollSetting = false;
+                    if (pageNum <= pageCount) {
+                        pageNum++;
+                        insertcode(pageNum, t, d);
+                    }
+                }
+            }
+        }, 1000);
+    });
+}
+function insertcode(pageNum, dtype, dname) {
+    var $body = $("#downlist_" + dname);
+    $.ajax({
+        method: 'post',
+        url: webUrl + 'ashx/GetDownLoad.ashx',
+        data: { pageNum: pageNum, pageSize: 12, type: dtype },
+        dataType: 'text',
+        cache: false,
+        success: function (data) {
+            $body.append(data);
+	    scrollSetting = true;
+            //下载链接
+            $(".downbox").mouseover(function () {
+                $(this).find(".downhover").css("display", "block");
+            }).mouseout(function () {
+                $(this).find(".downhover").css("display", "none");
+            });
+            
+        },
+        error: function (errobj, status, msg) {
+            alert(status + "\r\n" + msg);
+        },
+        ttt: ''
+    });
+    //$("#page_tag_load").hide();
+}
+//function endcode() {
+//    $("#page_tag_load").hide();
+//}
+
+
+
+/*关于*/
+var curkname = "kfccn";
+function kshow(kname)
+{
+	$("#l_"+curkname).hide('slow');
+	$("#r_"+curkname).show('slow');
+	$("#l_"+kname).show('slow');
+	$("#r_"+kname).hide('slow');
+	curkname = kname;
+}
+
+/*企业责任*/
+var curdutyname = "dutyabout";
+function dutyshow(dutyname)
+{
+	$("#l_"+curdutyname).hide('slow');
+	$("#r_"+curdutyname).show('slow');
+	$("#l_"+dutyname).show('slow');
+	$("#r_"+dutyname).hide('slow');
+	curdutyname = dutyname;
+	
+	if(dutyname!="share")
+		$("#t_tvc").html("");
+}
+
+function setSchoolinfo(sorder)
+{
+	switch(sorder)
+	{
+		case "1":
+			$("#sbtn1").attr("src", "images/btn/1school_cur.gif");
+			$("#sbtn2").attr("src", "images/btn/2school.gif");
+			$("#sdcon1").show();
+			$("#sdcon2").hide();
+			break;
+		case "2":
+			$("#sbtn1").attr("src", "images/btn/1school.gif");
+			$("#sbtn2").attr("src", "images/btn/2school_cur.gif");
+			$("#sdcon1").hide();
+			$("#sdcon2").show();
+			break;
+	}
+}
+
+function setTvcinfo(sorder)
+{
+	var s1 = new SWFObject("swf/player.swf","ply","565","375","9","#FFFFFF");
+	s1.addParam("wmode", "transparent");
+	s1.addParam("allowfullscreen","true");
+	s1.addParam("allowscriptaccess","always");
+	s1.addParam("flashvars","file="+sorder+".flv");
+	s1.write("t_tvc");
+	
+	$("#tsv5").show();
+	$("#tsv1").show();
+	$("#tsv2").show();
+	$("#tsv3").show();
+	$("#tsv4").show();
+	
+	$("#tsv"+sorder).hide();
+	
+	$(".t_tvctitle").html($("#tsv"+sorder).find(".s_tvc .s_tvc_title").html());
+}
+
+/*美食天地*/
+var cursmenuimg = "";
+$(document).ready(function(){
+	$('.smenus ul li img').mouseover(function(){
+		if($(this).attr("src").indexOf("b.")==-1)
+			$(this).attr("src", $(this).attr("src").replace(".","b."));
+	});
+	
+	$('.smenus ul li img').mouseout(function(){
+		if($(this).attr("src").indexOf("b.")!=-1 && cursmenuimg != $(this).attr("src"))
+			$(this).attr("src", $(this).attr("src").replace("b.","."));
+	});
+	
+	$('.smenus ul li img').click(function(){
+		var url = $(this).attr("url");
+		if(url!=null && url!="")
+		{
+			window.open(url);
+		}
+		else
+		{
+			$('.smenus ul li img').each(function(){
+				$(this).attr("src", $(this).attr("src").replace("b.","."));
+			});
+			$(this).attr("src", $(this).attr("src").replace(".","b."));
+			cursmenuimg = $(this).attr("src");
+			setbpicshow($(this).attr("folder"), $(this).attr("num"));
+		}
+	});
+	
+	$('.page_nums a').click(function(){
+		$('.page_nums a').each(function(){
+			$(this).removeClass("cur");
+		});
+		$(this).addClass("cur");
+		$("#newfood").attr("class", $(this).attr("bgname"));
+	});
+	
+	$('.page_nums2 a').click(function(){
+		$('.page_nums2 a').each(function(){
+			$(this).removeClass("cur");
+		});
+		$(this).addClass("cur");
+		$("#threeearly").attr("class", $(this).attr("bgname"));
+	});
+	
+	$(".arr_l,.arr_l_big").click(function(){
+		var sleft = document.getElementById('bsmallpic').scrollLeft;
+        console.log(sleft);
+        var index=sleft/117;
+         setActiveclass(index,"l");
+       // $('#bsmallpic li').eq(index-1).addClass('active').siblings('li').removeClass('active');
+		$('#bsmallpic').animate({scrollLeft:sleft-117+'px'});	
+		setTimeout("set_arr()",1);
+	});
+	
+	$(".arr_r,.arr_r_big").click(function(){
+		var sleft = document.getElementById('bsmallpic').scrollLeft;
+        var index=sleft/117;
+        setActiveclass(index,"r");
+        //console.log(sleft);
+       // $('#bsmallpic li').eq(index+1).addClass('active').siblings('li').removeClass('active');
+		$('#bsmallpic').animate({scrollLeft:sleft+117+'px'});
+		setTimeout("set_arr()",1);
+	});
+});
+
+//轮播点击事件
+function setActiveclass(index,dir)
+{
+    var lis=$('#bsmallpic li');
+
+    var currentIndex="";
+    $(lis).each(function(i){
+        if($(this).hasClass('active'))
+        {
+            currentIndex=i;
+        }
+    })
+
+    console.log(currentIndex);
+    
+    if(currentIndex!="")
+    {
+            if(dir=="l")
+            {
+                $(lis).eq(currentIndex-1).addClass('active').siblings('li').removeClass('active'); 
+            }
+            else
+            {
+                $(lis).eq(currentIndex+1).addClass('active').siblings('li').removeClass('active'); 
+            }
+    }
+    else
+    { 
+        if(dir=="l")
+        {
+            $(lis).eq(index-1).addClass('active').siblings('li').removeClass('active'); 
+        }
+        else
+        {
+            $(lis).eq(index+1).addClass('active').siblings('li').removeClass('active'); 
+        }
+    }
+    var img=$('#bsmallpic li.active').find('img');
+    setbpic(img);
+}
+//白皮书
+function setbook(bclass, nums)
+{
+	var a_str = "";
+	for(var i=1; i<=nums; i++)
+	{
+		a_str += "<a href=\"javascript:void(0)\""+(i==1 ? " class=\"cur\"" : "")+" bpic=\"images/book/"+bclass+"_"+i+".jpg\" onclick=\"setbookpic(this)\">"+i+"</a>";
+	}
+	$("#book").html('<img src="images/book/' + bclass + '_1.jpg" />');
+	$(".page_nums3").html(a_str);
+}
+
+function setbookpic(obj)
+{
+	$("#book").html('<img src="'+$(obj).attr("bpic")+'" />');
+	$('.page_nums3 a').each(function(){
+		$(this).removeClass("cur");
+	});
+	$(obj).addClass("cur");
+}
+
+function set_arr()
+{
+	var sleft = document.getElementById('bsmallpic').scrollLeft;
+	if(sleft==0)
+    {
+       $(".arr_l").hide();
+       // $('.arr_l_big').hide(); 
+    }
+    else
+    {
+        $(".arr_l").show();
+       // $('.arr_l_big').show();
+    }
+
+	var pnum = 0;
+	$(".bsmallpiclist ul li img").each(function(){
+		pnum++;
+	});
+	pnum = pnum-5;
+	if(sleft==(pnum*117) || pnum<0)
+	{
+        $(".arr_r").hide();
+        //$('.arr_r_big').hide();
+    }
+	else
+    {
+        $(".arr_r").show();
+        //$('.arr_r_big').show();
+    }
+		
+		
+	//alert("|"+sleft+"|"+pnum*117+"|");
+}
+
+function showbflash(fname)
+{
+	if((navigator.userAgent.indexOf('iPhone') != -1)||(navigator.userAgent.indexOf('iPod') != -1)||(navigator.userAgent.indexOf('iPad') != -1))
+	{
+		$("#bswf").html("<img src='images/b_"+fname+".jpg' />");
+	}
+	else
+	{
+        var so = new SWFObject("swf/"+fname+".swf", "bswf", "958", "707", "10", "");
+        so.addParam("wmode", "transparent");
+        so.addParam("quality", "high");
+        so.addParam("allowScriptAccess", "sameDomain");
+        so.addParam("movie", "swf/"+fname+".swf");
+        so.addParam("id", "bswf");
+        so.write("bswf");	
+	}
+}
+
+function setbpic(obj)
+{
+    $(obj).parent().addClass('active').siblings("li").removeClass('active');
+	$(".bshowpic_box").html('<img src="'+$(obj).attr("bsrc")+'" />');	
+}
+
+function setbpicshow(folder, num)
+{
+	var pdiv_w = 117*num;
+	var pichtml = '<div class="bsmallpiclist" style="width:'+pdiv_w+'px;">';
+	pichtml += '<ul>';
+	for(var i=1; i<=num; i++)
+	{
+    	pichtml += '<li><img src="images/jy/'+folder+'/thumb/'+i+'.jpg" bsrc="images/jy/'+folder+'/big/'+i+'.jpg" onclick="setbpic(this)" /></li>';
+	}
+    pichtml += '</ul>';
+    pichtml += '</div>';
+	
+	$("#bsmallpic").html(pichtml);
+	$(".bshowpic_box").html('<img src="images/jy/'+folder+'/big/1.jpg" />');
+    $('.bsmallpiclist li').eq(0).addClass('active');
+	$('#bsmallpic').animate({scrollLeft:'0px'});
+	setTimeout("set_arr()",500);
+}
+
+//分页
+function getPagelist(pagecount, curpage, objectid)
+{
+	var pagehtml = "";
+	var cnum = 0;
+	var bnum = 0;
+	var onum = 0;
+	if(curpage <= 0)
+		curpage = 1;
+	if(curpage >= pagecount)
+		curpage = pagecount;
+	
+	if(curpage!=1)
+		pagehtml += '<a href="javascript:void(0)" class="pre" onclick="setPage(' + pagecount + ',' + (curpage-1) + ',\'' + objectid + '\')">&nbsp;</a>';
+	if(curpage<=4)
+	{		
+		for(var i=1;i<=4;i++)
+		{
+			pagehtml += '<a href="javascript:void(0)"' + (curpage == i ? ' class="cur"' : '') + ' onclick="setPage(' + pagecount + ',' + i + ',\'' + objectid + '\')">' + i + '</a>';
+			cnum++;
+			if(cnum>=pagecount)
+				break;
+		}
+		if(pagecount>4)
+		{
+			if((pagecount-cnum)>1)
+				pagehtml += "...";
+			pagehtml += '<a href="javascript:void(0)" onclick="setPage(' + pagecount + ',' + pagecount + ',\'' + objectid + '\')">' + pagecount + '</a>';
+		}
+	}
+	else
+	{
+		pagehtml += '<a href="javascript:void(0)"' + (curpage == i ? ' class="cur"' : '') + ' onclick="setPage(' + pagecount + ',1,\'' + objectid + '\')">1</a>';
+		cnum++;
+		bnum = curpage-1;
+		onum = curpage+1;
+		if(bnum <= cnum)
+			bnum = cnum+1;
+		if(onum > pagecount)
+			onum = pagecount;
+		if(bnum>2)
+			pagehtml += "...";
+		for(var i=bnum; i<=onum; i++)
+		{
+			pagehtml += '<a href="javascript:void(0)"' + (curpage == i ? ' class="cur"' : '') + ' onclick="setPage(' + pagecount + ',' + i + ',\'' + objectid + '\')">' + i + '</a>';
+			cnum++;
+		}
+		if(pagecount>onum)
+		{
+			if((pagecount-onum)>1)
+				pagehtml += "...";
+			pagehtml += '<a href="javascript:void(0)" onclick="setPage(' + pagecount + ',' + pagecount + ',\'' + objectid + '\')">' + pagecount + '</a>';
+		}
+	}	
+	if(curpage!=pagecount)
+		pagehtml += '<a href="javascript:void(0)" class="next" onclick="setPage(' + pagecount + ',' + (curpage+1) + ',\'' + objectid + '\')">&nbsp;</a>';
+	$("#"+objectid).html(pagehtml);
+}
+
+function setPage(pagecount, curpage, objectid)
+{
+	if(curpage <= 0)
+		curpage = 1;
+	if(curpage >= pagecount)
+	    curpage = pagecount;
+	$.ajax({
+	    method: 'post',
+	    url: webUrl+'ashx/GetNews.ashx',
+	    data: { Current: curpage },
+	    dataType: 'json',
+	    cache: false,
+	    success: function (data) {
+	        var list = "<ul>";
+	        for (var i = 0; i < data.dt.length; i++) {
+	            if (data.dt[i]["IsBlank"] == "1") {
+	                list += "<li class=\"cline1\"><a href=\"" + data.dt[i]["Link"] + "\" target=\"_blank\">" + data.dt[i]["Title"] + "</a></li>";
+	            }
+	            else {
+	                list += "<li class=\"cline1\"><a href=\"javascript:getNews(" + data.dt[i]["NewsCenterID"] + ")\">" + data.dt[i]["Title"] + "</a></li>";
+	            }
+	        }
+	        list += "</ul>";
+	        $("#list").html(list);
+	    },
+	    error: function (errobj, status, msg) {
+	        alert(status + "\r\n" + msg);
+	    },
+	    ttt: ''
+	});
+	//ajax动态加载新闻内容
+	
+	getPagelist(pagecount, curpage, objectid)
+}
+
+
+function getNews(id) {
+    $("#title").html("");
+    $("#info").html("");
+    $.ajax({
+        method: 'post',
+        url: webUrl + 'ashx/GetNewsInfo.ashx',
+        data: { id: id },
+        dataType: 'json',
+        cache: false,
+        success: function (data) {
+            var title = "";
+            var info = "";
+            var dtArr = data[0]["Addtime"].toString().split(".");
+            var dt = dtArr[0] + "年" + dtArr[1] + "月";
+            if (data.length > 0) {
+                title += "<span>" + dt + "</span>" + data[0]["Title"].toString(); ;
+                info += data[0]["Description"].toString();
+            }
+            $("#title").html(title);
+            $("#info").html(info);
+        },
+        error: function (errobj, status, msg) {
+            alert(status + "\r\n" + msg);
+        },
+        ttt: ''
+    });
+}
+
+//收藏页面
+function bookmarkit() {
+    var fav_url = 'http://www.kfc.com.cn';
+    var fav_title = '肯德基官网';
+    if (document.all && window.external) {
+        window.external.AddFavorite(fav_url, fav_title);
+    } else if (window.sidebar) {
+        window.sidebar.addPanel(fav_title, fav_url, "");
+    } else {
+        alert("浏览器不支持，请手动加入收藏夹");
+    }
+}
+
+var winHeight = 0;
+function changeToolbarTop()
+{
+     if (window.innerHeight)
+	 {
+		 winHeight = window.innerHeight;
+	 }
+     else if ((document.body) && (document.body.clientHeight))
+	 {
+		 winHeight = document.body.clientHeight;
+	 }
+     if (document.documentElement  && document.documentElement.clientHeight)
+     {
+     	winHeight = document.documentElement.clientHeight;
+     }
+	 function isIE6() {
+		 return navigator.userAgent.split(";")[1].toLowerCase().indexOf("msie 6.0")=="-1"?false:true;   
+		 }
+	if(!isIE6()){
+		if((navigator.userAgent.indexOf('iPhone') != -1)||(navigator.userAgent.indexOf('iPod') != -1)||(navigator.userAgent.indexOf('iPad') != -1)){}
+		else{
+			$('.toolbar').css('bottom','auto');
+		 	$('.toolbar').css('top',winHeight-39);
+			}
+	}
+}
+window.onresize=changeToolbarTop;
