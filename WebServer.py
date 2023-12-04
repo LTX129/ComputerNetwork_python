@@ -25,6 +25,7 @@ def handle_request(client_socket, addr):
         response = 'HTTP/1.1 400 Bad Request\n\n'.encode()
 
     client_socket.sendall(response)
+
     print("client close")
     client_socket.close()
 
@@ -50,4 +51,4 @@ def startServer(serveraddr, port):
     finally:
         server_socket.close()
 
-startServer("", 1314)
+startServer("127.1.1.1", 2000)
