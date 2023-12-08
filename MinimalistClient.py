@@ -8,10 +8,10 @@ def fetch_file_and_print(url):
 
         # 检查响应状态码
         if response.status_code == 200:
+            file_content = response.text
             print("HTTP response message:")
             print(f"status code: {response.status_code}")
             print(f"Response header:\n{response.headers}\n")
-
             # 获取文件内容并打印
             file_content = response.text
             print("file content:")
