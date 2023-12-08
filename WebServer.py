@@ -51,4 +51,4 @@ def startServer(serveraddr, port):
     finally:
         server_socket.close()
 
-startServer("127.1.1.1", 2000)
+startServer("", 2000)

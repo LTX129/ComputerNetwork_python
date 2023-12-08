@@ -42,7 +42,7 @@ def extract_url(request):
 
 def forward_request(url):
     # Forward the request to the actual web server and return the response
-    server_socket = socket.create_connection(('', 1314))
+    server_socket = socket.create_connection(('', 2000))
     server_socket.sendall(f'GET /{url} HTTP/1.1\r\nHost: 127.0.0.1\r\n\r\n'.encode())
     response = server_socket.recv(4096)
     server_socket.close()
