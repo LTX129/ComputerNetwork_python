@@ -15,7 +15,7 @@ def create_server_socket(addr, port):
 
 def handle_request(client_socket):
     # Handle the incoming client request
-    request = client_socket.recv(1024).decode()
+    request = client_socket.recv(2048).decode()
     print(f"Request received: {request.splitlines()[0]}")
 
     # Extract the URL from the GET request
@@ -60,4 +60,6 @@ def proxy(port):
     finally:
         server_socket.close()
 
-proxy(8080)
+if __name__ == "__main__":
+    port = input("Please enter the port of the proxy: ")
+    proxy(port)
