@@ -87,7 +87,7 @@ def doOnePing(dest_addr, ttl, timeout):
                 recv_packet, addr = recv_socket.recvfrom(1024)
                 time_received = time.time()
                 bytes = struct.calcsize("d")
-                t = struct.unpack("d",recv_packet[28:28 +bytes])[0]
+                t = struct.unpack("d", recv_packet[28:28 + bytes])[0]
                 icmpHeader = recv_packet[20:28]
                 icmpType, _, _, packetID, _ = struct.unpack("bbHHh", icmpHeader)
 
@@ -102,22 +102,39 @@ def doOnePing(dest_addr, ttl, timeout):
 
     return ttl, addr[0] if 'addr' in locals() and addr else None, delays
 
-def traceroute(host, max_hops=30, timeout=3):
+
+def traceroute(host, max_hops=30, timeout=1):
+    packets_sent, packets_received, total_time = 0, 0, []
+
     """
     Run the traceroute to the given host.
     """
     dest_addr = socket.gethostbyname(host)
-    print(f"通过最多 {max_hops} 个跃点跟踪\n到 {host} [{dest_addr}] 的路由:\n")
+    print(f"Trace the route to {host} [{dest_addr}] by up to {max_hops} hops:\n")
 
     for ttl in range(1, max_hops + 1):
         ttl, addr, delays = doOnePing(dest_addr, ttl, timeout)
         delay_strs = ' '.join(delays)
-        print(f"{ttl:2}   {delay_strs}  {addr if addr else '请求超时。'}")
+        print(f"{ttl:2}   {delay_strs}  {addr if addr else 'Request Timeout。'}")
+
+        packets_sent += 3  # 3 pings per TTL
+        packets_received += len([d for d in delays if '*' not in d])
+        total_time.extend([float(d[:-3]) for d in delays if '*' not in d])
 
         if addr == dest_addr:
-            break
+          break
 
-    print("\n跟踪完成。")
+# Summary
+    packets_lost = packets_sent - packets_received
+    loss_percentage = (packets_lost / packets_sent) * 100 if packets_sent else 0
+    min_time = min(total_time) if total_time else 0
+    max_time = max(total_time) if total_time else 0
+    avg_time = sum(total_time) / len(total_time) if total_time else 0
+    print(f"\n{dest_addr}Traceroute statistics:")
+    print(
+        f"    Data packet: sent = {packets_sent}, Received = {packets_received}, Lost = {packets_lost} ({loss_percentage:.0f}% Lost)，")
+    print(f"Estimated time of round trip in milliseconds:")
+    print(f"    min = {min_time:.0f}ms，max = {max_time:.0f}ms，average = {avg_time:.0f}ms")
 
 # Example usage
-traceroute("www.baidu.com")
+traceroute("lancaster.ac.uk")
