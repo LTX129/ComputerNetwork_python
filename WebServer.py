@@ -52,6 +52,53 @@ def extract_file_name(request_line):
     if len(parts) > 1 and parts[0] == 'GET':
         return parts[1].strip('/')
 
+
+def handle_get_request(client_socket, filename):
+    if filename:
+        try:
+            with open(filename, 'rb') as file:
+                file_content = file.read()
+                response_header = 'HTTP/1.1 200 OK\r\n'
+                response_header += 'Content-Type: text/html; charset=utf-8\r\n'
+                response_header += f'Content-Length: {len(file_content)}\r\n\r\n'
+                response = response_header.encode() + file_content
+                client_socket.sendall(response)
+        except FileNotFoundError:
+            send_error_response(client_socket, '404 Not Found')
+    else:
+        send_error_response(client_socket, '400 Bad Request')
+
+def handle_put_request(client_socket, filename, request):
+    try:
+        content = request.split('\r\n\r\n', 1)[1]
+        with open(filename, 'wb') as file:
+            file.write(content.encode())
+        response_header = 'HTTP/1.1 201 Created\r\n\r\n'
+        client_socket.sendall(response_header.encode())
+    except Exception as e:
+        send_error_response(client_socket, '500 Internal Server Error')
+
+def handle_delete_request(client_socket, filename):
+    try:
+        os.remove(filename)
+        response_header = 'HTTP/1.1 200 OK\r\n\r\n'
+        client_socket.sendall(response_header.encode())
+    except FileNotFoundError:
+        send_error_response(client_socket, '404 Not Found')
+    except Exception as e:
+        send_error_response(client_socket, '500 Internal Server Error')
+
+def send_error_response(client_socket, error_message):
+    # Function to send an error response
+    response_header = f'HTTP/1.1 {error_message}\r\n\r\n'
+    client_socket.sendall(response_header.encode())
+
+def extract_request_type_and_filename(request_line):
+    parts = request_line.split()
+    if len(parts) > 1:
+        return parts[0], parts[1].strip('/')
+    return None, None
+
 def startServer(serveraddr, port):
     try:
         server_socket = create_server_socket(serveraddr, port)
