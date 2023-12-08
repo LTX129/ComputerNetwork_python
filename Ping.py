@@ -47,10 +47,10 @@ def receiveOnePing(icmpSocket, destinationAddress, ID, timeout, timeSent, dataSi
 
     timeLeft = timeout
     while True:
-        startedSelect = time.time()
-        whatReady = select.select([icmpSocket], [], [], timeLeft)
-        howLongInSelect = (time.time() - startedSelect)
-        if whatReady[0] == []:  # Timeout
+        started_select = time.time()
+        what_ready = select.select([icmpSocket], [], [], timeLeft)
+        how_long_in_select = (time.time() - started_select)
+        if not what_ready[0]:  # Timeout
             return -1, 0, 0
 
         timeReceived = time.time()
@@ -73,13 +73,10 @@ def receiveOnePing(icmpSocket, destinationAddress, ID, timeout, timeSent, dataSi
 
             # Extract the data size from the ICMP packet
             dataSize = len(recPacket) - 28
-            timeLeft = timeLeft - howLongInSelect
+            timeLeft = timeLeft - how_long_in_select
             if delay > timeout:
                 return -1, 0, 0
             return delay, ipTTL, dataSize
-
-
-
 
 def sendOnePing(icmpSocket, destinationAddress, ID, dataSize):
     # 1. Build ICMP header
@@ -182,4 +179,4 @@ def ping(host, timeout=1,count= 4, dataSize=64):
         minDelay * 1000, maxDelay * 1000, avgDelay * 1000))
 
 
-ping("www.zhihu.com")
+ping("www.baidu.com")
