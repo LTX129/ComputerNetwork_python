@@ -13,13 +13,14 @@ error_501 = '501 Not Implemented'
 def create_server_socket(addr, port):
     # Create a socket and bind to the specified port
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server_socket.bind((addr, port))
     server_socket.listen(5)
     print(f"Web server running on port {port}")
     return server_socket
 
 
-def handle_request(client_socket):
+def handle_request(client_socket, addr):
     # Handle the incoming client request
     try:
         request = client_socket.recv(4096).decode()
