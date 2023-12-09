@@ -3,6 +3,7 @@ import socket
 import os
 import threading
 
+N = None
 def create_server_socket(addr,port):
     # Create a socket and bind to the specified port
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -114,5 +115,5 @@ def startServer(serveraddr, port):
         server_socket.close()
 
 if __name__ == "__main__":
-    port = input("Please enter the port of the proxy: ")
-    startServer("", port)
+    port_input = int(input("Please enter the port of the server: "))
+    startServer("", port_input)

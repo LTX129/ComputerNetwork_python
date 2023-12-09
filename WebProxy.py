@@ -1,7 +1,7 @@
 
 import socket
 import os
-
+import WebServer
 # Define a simple cache structure
 cache = {}
 
@@ -42,7 +42,7 @@ def extract_url(request):
 
 def forward_request(url):
     # Forward the request to the actual web server and return the response
-    server_socket = socket.create_connection(('', 2000))
+    server_socket = socket.create_connection(('', 8000))
     server_socket.sendall(f'GET /{url} HTTP/1.1\r\nHost: 127.0.0.1\r\n\r\n'.encode())
     response = server_socket.recv(4096)
     server_socket.close()
@@ -61,5 +61,5 @@ def proxy(port):
         server_socket.close()
 
 if __name__ == "__main__":
-    port = input("Please enter the port of the proxy: ")
+    port = int(input("Please enter the port of the proxy: "))
     proxy(port)
