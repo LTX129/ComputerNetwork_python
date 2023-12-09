@@ -115,7 +115,15 @@ def traceroute(host, max_hops=30, timeout=1):
     for ttl in range(1, max_hops + 1):
         ttl, addr, delays = doOnePing(dest_addr, ttl, timeout)
         delay_strs = ' '.join(delays)
-        print(f"{ttl:2}   {delay_strs}  {addr if addr else 'Request Timeout。'}")
+        # 尝试将IP地址解析为域名
+        resolved_name = addr
+        if addr:
+            try:
+                resolved_name = socket.gethostbyaddr(addr)[0]
+            except socket.herror:
+                # 如果无法解析IP地址，保留原始IP地址
+                pass
+        print(f"{ttl:2}   {delay_strs}  {addr if addr else 'Request Timeout。'} [{resolved_name}]")
 
         packets_sent += 3  # 3 pings per TTL
         packets_received += len([d for d in delays if '*' not in d])
