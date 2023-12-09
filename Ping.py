@@ -7,7 +7,6 @@ import sys
 import struct
 import time
 import select
-import binascii
 
 ICMP_ECHO_REQUEST = 8  # ICMP type code for echo request messages
 ICMP_ECHO_REPLY = 0  # ICMP type code for echo reply messages
@@ -15,16 +14,16 @@ ICMP_ECHO_REPLY = 0  # ICMP type code for echo reply messages
 
 def checksum(string):
     csum = 0
-    countTo = (len(string) // 2) * 2
+    count_to = (len(string) // 2) * 2
     count = 0
 
-    while count < countTo:
-        thisVal = string[count + 1] * 256 + string[count]
-        csum = csum + thisVal
+    while count < count_to:
+        this_val = string[count + 1] * 256 + string[count]
+        csum = csum + this_val
         csum = csum & 0xffffffff
         count = count + 2
 
-    if countTo < len(string):
+    if count_to < len(string):
         csum = csum + string[len(string) - 1]
         csum = csum & 0xffffffff
 
@@ -37,7 +36,7 @@ def checksum(string):
     return answer
 
 
-def receiveOnePing(icmpSocket, destinationAddress, ID, timeout, timeSent, dataSize):
+def receive_one_ping(icmp_socket, local_id, timeout, time_sent):
     # 1. Wait for the socket to receive a reply
     # 2. Once received, record time of receipt, otherwise, handle a timeout
     # 3. Compare the time of receipt to time of sending, producing the total network delay
@@ -45,40 +44,41 @@ def receiveOnePing(icmpSocket, destinationAddress, ID, timeout, timeSent, dataSi
     # 5. Check that the ID matches between the request and reply
     # 6. Return total network delay
 
-    timeLeft = timeout
+    time_left = timeout
     while True:
         started_select = time.time()
-        what_ready = select.select([icmpSocket], [], [], timeLeft)
+        what_ready = select.select([icmp_socket], [], [], time_left)
         how_long_in_select = (time.time() - started_select)
         if not what_ready[0]:  # Timeout
             return -1, 0, 0
 
-        timeReceived = time.time()
-        recPacket, addr = icmpSocket.recvfrom(1024)
+        time_received = time.time()
+        rec_packet, _ = icmp_socket.recvfrom(1024)
 
         # Fetch the ICMP header from the IP packet
-        icmpHeader = recPacket[20:28]
+        icmp_header = rec_packet[20:28]
 
         # Unpack the header to extract the type, code, checksum, and ID
-        icmpType, code, checksum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
+        icmp_type, _, _, packet_id, _ = struct.unpack("bbHHh", icmp_header)
 
         # Check that the ID matches between the request and reply
-        if packetID == ID and icmpType == 0:
+        if packet_id == local_id and icmp_type == 0:
             # Calculate the total network delay
-            delay = timeReceived - timeSent
+            delay = time_received - time_sent
 
             # Extract the TTL from the IP header
-            ipHeader = recPacket[:20]
-            ipTTL = struct.unpack("B", ipHeader[8:9])[0]
+            ip_header = rec_packet[:20]
+            ip_ttl = struct.unpack("B", ip_header[8:9])[0]
 
             # Extract the data size from the ICMP packet
-            dataSize = len(recPacket) - 28
-            timeLeft = timeLeft - how_long_in_select
+            data_size = len(rec_packet) - 28
+            time_left = time_left - how_long_in_select
             if delay > timeout:
                 return -1, 0, 0
-            return delay, ipTTL, dataSize
+            return delay, ip_ttl, data_size
 
-def sendOnePing(icmpSocket, destinationAddress, ID, dataSize):
+
+def send_one_ping(icmp_socket, destination_address, local_id, data_size):
     # 1. Build ICMP header
     # 2. Checksum ICMP packet using given function
     # 3. Insert checksum into packet
@@ -86,77 +86,78 @@ def sendOnePing(icmpSocket, destinationAddress, ID, dataSize):
     # 5. Record time of sending
 
     # Build the ICMP header
-    myChecksum = 0
-    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
-    data = struct.pack("d", time.time()) + b"#" * (dataSize - 8)
+    my_checksum = 0
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, my_checksum, local_id, 1)
+    data = struct.pack("d", time.time()) + b"#" * (data_size - 8)
 
     # Calculate the checksum on the data and the header
-    myChecksum = checksum(header + data)
+    my_checksum = checksum(header + data)
     if sys.platform == 'darwin':
-        myChecksum = socket.htons(myChecksum) & 0xffff  # 针对MacOS
+        my_checksum = socket.htons(my_checksum) & 0xffff  # 针对MacOS
     else:
-        myChecksum = socket.htons(myChecksum)  # 针对其他平台
+        my_checksum = socket.htons(my_checksum)  # 针对其他平台
 
     # Insert the checksum into the header
-    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, my_checksum, local_id, 1)
 
     # Send the packet using the socket
-    icmpSocket.sendto(header + data, (destinationAddress, 80))
+    icmp_socket.sendto(header + data, (destination_address, 80))
 
     # Record the time of sending
-    timeSent = time.time()
+    time_sent = time.time()
 
-    return timeSent
+    return time_sent
 
 
-def doOnePing(destinationAddress, timeout, dataSize):
+def do_one_ping(destination_address, timeout, data_size):
     # 1. Create ICMP socket
     icmp = socket.getprotobyname('icmp')
-    icmp_Socket = socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp)
-    ID = os.getpid();
+    icmp_socket = socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp)
+    local_id = os.getpid()
     # 2. Call sendOnePing function
-    timeSent = sendOnePing(icmp_Socket, destinationAddress, ID, dataSize)
+    time_sent = send_one_ping(icmp_socket, destination_address, local_id, data_size)
     # 3. Call receiveOnePing function
-    delay, ipTTL, dataSize = receiveOnePing(icmp_Socket, destinationAddress, ID, timeout, timeSent, dataSize)
+    delay, ip_ttl, data_size = receive_one_ping(icmp_socket, local_id, timeout, time_sent)
     # 4. Close ICMP socket
-    icmp_Socket.close()
+    icmp_socket.close()
     # 5. Return total network delay
-    return delay, ipTTL, dataSize
+    return delay, ip_ttl, data_size
 
 
-def ping(host, timeout=1,count= 4, dataSize=64):
+def ping(host, timeout=1, count=4, data_size=64):
     # 1. Look up hostname, resolving it to an IP address
     # 2. Call doOnePing function, approximately every second
     # 3. Print out the returned delay, TTL, and data size
     # 4. Continue this process until stopped
 
     # Look up the hostname and resolve it to an IP address
-    destAddr = socket.gethostbyname(host)
+    dest_addr = socket.gethostbyname(host)
 
     # Print out the destination address
-    print("Ping " + host + " (" + destAddr + ") using Python:")
+    print("Ping " + host + " (" + dest_addr + ") using Python:")
 
     # Ping for the specified number of times
     sent = 0
     received = 0
-    minDelay = float("inf")
-    maxDelay = 0
-    totalDelay = 0
+    min_delay = float("inf")
+    max_delay = 0
+    total_delay = 0
     for i in range(count):
         # Call the doOnePing function
-        delay, ipTTL, dataSize = doOnePing(destAddr, timeout, dataSize)
+        delay, ip_ttl, data_size = do_one_ping(dest_addr, timeout, data_size)
 
         # Print out the returned delay, TTL, and data size
         if delay == -1:
             print("Request timed out.")
         else:
             print(
-                "%d bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms" % (dataSize, destAddr, i + 1, ipTTL, delay * 1000))
+                "%d bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms" % (
+                    data_size, dest_addr, i + 1, ip_ttl, delay * 1000))
             sent += 1
             received += 1
-            minDelay = min(minDelay, delay)
-            maxDelay = max(maxDelay, delay)
-            totalDelay += delay
+            min_delay = min(min_delay, delay)
+            max_delay = max(max_delay, delay)
+            total_delay += delay
 
         # Wait for one second before sending the next ping
         time.sleep(1)
@@ -164,19 +165,19 @@ def ping(host, timeout=1,count= 4, dataSize=64):
     # Print out the summary
     lost = sent - received
     if sent == 0:
-        lossPercent = 0
+        loss_percent = 0
     else:
-        lossPercent = lost / sent * 100
+        loss_percent = lost / sent * 100
     if received == 0:
-        avgDelay = 0
+        avg_delay = 0
     else:
-        avgDelay = totalDelay / received
-    print("\nPing statistics for %s:" % destAddr)
-    print("    Packets: Sent = %d, Received = %d, Lost = %d (%.0f%% loss)" % (sent, received, lost, lossPercent))
+        avg_delay = total_delay / received
+    print("\nPing statistics for %s:" % dest_addr)
+    print("    Packets: Sent = %d, Received = %d, Lost = %d (%.0f%% loss)" % (sent, received, lost, loss_percent))
     if received > 0:
         print("Approximate round trip times in milli-seconds:")
         print("    Minimum = %.3fms, Maximum = %.3fms, Average = %.3fms" % (
-        minDelay * 1000, maxDelay * 1000, avgDelay * 1000))
+            min_delay * 1000, max_delay * 1000, avg_delay * 1000))
 
 
-ping("www.baidu.com")
+ping("lancaster.ac.uk")
