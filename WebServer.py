@@ -11,7 +11,17 @@ error_501 = '501 Not Implemented'
 
 
 def create_server_socket(addr, port):
-    # Create a socket and bind to the specified port
+    """
+        Create a server socket and bind it to the specified address and port.
+
+        Args:
+            addr (str): The IP address or hostname to bind the socket to.
+            port (int): The port number to bind the socket to.
+
+        Returns:
+            socket.pyi: The created server socket.
+
+        """
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server_socket.bind((addr, port))
@@ -21,7 +31,16 @@ def create_server_socket(addr, port):
 
 
 def handle_request(client_socket, addr):
-    # Handle the incoming client request
+    """
+        Handles the incoming client request.
+
+        Args:
+            client_socket (socket.pyi): The client socket object.
+            addr (tuple): The address of the client.
+
+        Returns:
+            None
+        """
     try:
         request = client_socket.recv(4096).decode()
         request_lines = request.splitlines()
@@ -47,6 +66,16 @@ def handle_request(client_socket, addr):
 
 
 def handle_get_request(client_socket, filename):
+    """
+        Handles a GET request from a client.
+
+        Args:
+            client_socket (socket.pyi): The client socket object.
+            filename (str): The name of the file to be retrieved.
+
+        Returns:
+            None
+        """
     if filename:
         try:
             with open(filename, 'rb') as file:
@@ -78,6 +107,20 @@ def handle_get_request(client_socket, filename):
 
 
 def handle_put_request(client_socket, filename, request):
+    """
+        Handles a PUT request by saving the content to a file.
+
+        Args:
+            client_socket (socket.pyi): The client socket.
+            filename (str): The name of the file to save the content to.
+            request (str): The HTTP request.
+
+        Raises:
+            Exception: If an error occurs while handling the request.
+
+        Returns:
+            None
+        """
     try:
         content = request.split('\r\n\r\n', 1)[1]
         with open(filename, 'wb') as file:
@@ -89,6 +132,20 @@ def handle_put_request(client_socket, filename, request):
 
 
 def handle_delete_request(client_socket, filename):
+    """
+        Handles a DELETE request by deleting the specified file.
+
+        Args:
+            client_socket (socket.pyi): The client socket object.
+            filename (str): The name of the file to be deleted.
+
+        Raises:
+            FileNotFoundError: If the specified file does not exist.
+            Exception: If an error occurs while deleting the file.
+
+        Returns:
+            None
+        """
     try:
         os.remove(filename)
         response_header = 'HTTP/1.1 200 OK\r\n\r\n'
@@ -100,13 +157,32 @@ def handle_delete_request(client_socket, filename):
 
 
 def send_error_response(client_socket, error_message):
-    # Function to send an error response
+    """
+        Function to send an error response to the client.
+
+        Parameters:
+        client_socket (socket.pyi): The client socket to send the response to.
+        error_message (str): The error message to include in the response.
+
+        Returns:
+        None
+    """
     response_header = f'HTTP/1.1 {error_message}\r\n\r\n'
     client_socket.sendall(response_header.encode())
 
 
 def extract_request_type_and_filename(request_line):
-    # Extract the file name from the HTTP request
+    """
+        Extracts the request type and filename from the HTTP request.
+
+        Args:
+            request_line (str): The HTTP request line.
+
+        Returns:
+            tuple: A tuple containing the request type and filename.
+                   The request type is a string and the filename is a string without leading or trailing slashes.
+
+    """
     parts = request_line.split()
     if len(parts) > 1:
         return parts[0], parts[1].strip('/')
@@ -114,6 +190,16 @@ def extract_request_type_and_filename(request_line):
 
 
 def start_server(server_addr, port):
+    """
+        Starts the multi-thread web server on the specified address and port.
+
+        Args:
+            server_addr (str): The server address.
+            port (int): The port number.
+
+        Returns:
+            None
+    """
     server_socket = None
     try:
         server_socket = create_server_socket(server_addr, port)

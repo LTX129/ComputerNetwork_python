@@ -9,20 +9,29 @@ ICMP_ECHO_REQUEST = 8  # ICMP type code for echo request messages
 ICMP_ECHO_REPLY = 0  # ICMP type code for echo reply messages
 
 
-# Provided checksum function from the coursework material
 def checksum(string):
+    """
+        Calculate the checksum of a string.
+
+        Args:
+            string (str): The input string.
+
+        Returns:
+            int: The calculated checksum.
+
+    """
     csum = 0
     count_to = (len(string) // 2) * 2
     count = 0
 
     while count < count_to:
         this_val = string[count + 1] * 256 + string[count]
-        csum = csum + this_val
+        csum = csum + int(this_val)
         csum = csum & 0xffffffff
         count = count + 2
 
     if count_to < len(string):
-        csum = csum + string[len(string) - 1]
+        csum = csum + int(string[len(string) - 1])
         csum = csum & 0xffffffff
 
     csum = (csum >> 16) + (csum & 0xffff)
@@ -36,7 +45,16 @@ def checksum(string):
 
 def create_packet(local_id):
     """
-    Create a new echo request packet based on the given "id".
+        Create a new echo request packet based on the given "id".
+
+        Args:
+            local_id (int): The local identifier for the packet.
+
+        Returns:
+            bytes: The echo request packet.
+
+        Raises:
+            None.
     """
     header = struct.pack('bbHHh', ICMP_ECHO_REQUEST, 0, 0, local_id, 1)
     data = 192 * 'Q'
@@ -57,6 +75,14 @@ def create_packet(local_id):
 def send_one_ping(send_socket, dest_addr, local_id):
     """
     Send one ping to the destination address using the given socket.
+
+    Args:
+        send_socket (socket.pyi): The socket used to send the ping.
+        dest_addr (str): The destination address to send the ping to.
+        local_id (int): The local ID of the ping packet.
+
+    Returns:
+        None
     """
     packet = create_packet(local_id)
     send_socket.sendto(packet, (dest_addr, 1))
@@ -65,6 +91,15 @@ def send_one_ping(send_socket, dest_addr, local_id):
 def do_one_ping(dest_addr, ttl, timeout):
     """
     Perform three ping operations and return the time measurements.
+
+    Args:
+        dest_addr (str): The destination address to ping.
+        ttl (int): The time-to-live value for the ping packets.
+        timeout (float): The timeout value for each ping operation.
+
+    Returns:
+        tuple: A tuple containing the time-to-live value, the destination address (if available), and the time measurements.
+
     """
     icmp_proto = socket.getprotobyname('icmp')
     delays = []
@@ -103,24 +138,32 @@ def do_one_ping(dest_addr, ttl, timeout):
 
 
 def traceroute(host, max_hops=30, timeout=1):
-    packets_sent, packets_received, total_time = 0, 0, []
+    """
+        Run the traceroute to the given host.
 
+        Args:
+            host (str): The hostname or IP address of the destination.
+            max_hops (int, optional): The maximum number of hops to trace. Defaults to 30.
+            timeout (int, optional): The timeout value for each hop in seconds. Defaults to 1.
+
+        Returns:
+            None
     """
-    Run the traceroute to the given host.
-    """
+    packets_sent, packets_received, total_time = 0, 0, []
+    # Run the traceroute to the given host.
     dest_addr = socket.gethostbyname(host)
     print(f"Trace the route to {host} [{dest_addr}] by up to {max_hops} hops:\n")
 
     for ttl in range(1, max_hops + 1):
         ttl, addr, delays = do_one_ping(dest_addr, ttl, timeout)
         delay_strs = ' '.join(delays)
-        # 尝试将IP地址解析为域名
+        # Attempts to resolve an IP address to a domain name
         resolved_name = addr
         if addr:
             try:
                 resolved_name = socket.gethostbyaddr(addr)[0]
             except socket.herror:
-                # 如果无法解析IP地址，保留原始IP地址
+                # If the IP address cannot be resolved, retain the original IP address
                 pass
         print(f"{ttl:2}   {delay_strs}  {addr if addr else 'Request Timeout。'} [{resolved_name}]")
 
