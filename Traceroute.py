@@ -7,6 +7,8 @@ import time
 
 ICMP_ECHO_REQUEST = 8  # ICMP type code for echo request messages
 ICMP_ECHO_REPLY = 0  # ICMP type code for echo reply messages
+ICMP_ECHO_UNREACHABLE = 3
+ICMP_ECHO_TTL0 = 11
 
 
 def checksum(string):
@@ -125,7 +127,7 @@ def do_one_ping(dest_addr, ttl, timeout):
                 t = struct.unpack("d", recv_packet[28:28 + bytes_num])[0]
                 icmp_header = recv_packet[20:28]
                 icmp_type, _, _, packet_id, _ = struct.unpack("bbHHh", icmp_header)
-                if packet_id == local_id or (icmp_type == 11 or icmp_type == 3):
+                if packet_id == local_id or (icmp_type == ICMP_ECHO_TTL0 or icmp_type == ICMP_ECHO_UNREACHABLE):
                     delays.append(f"{(time_received - started_select) * 1000:.0f} ms")
                 elif packet_id == local_id or icmp_type == ICMP_ECHO_REPLY:
                     delays.append(f"{(time_received - t) * 1000:.0f} ms")

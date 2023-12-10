@@ -10,6 +10,8 @@ import select
 
 ICMP_ECHO_REQUEST = 8  # ICMP type code for echo request messages
 ICMP_ECHO_REPLY = 0  # ICMP type code for echo reply messages
+ICMP_ECHO_UNREACHABLE = 3
+ICMP_ECHO_TTL0 = 11
 
 
 def checksum(string):
@@ -76,6 +78,10 @@ def receive_one_ping(icmp_socket, local_id, timeout, time_sent):
 
         # Unpack the header to extract the type, code, checksum, and ID
         icmp_type, _, _, packet_id, _ = struct.unpack("bbHHh", icmp_header)
+
+        # Bad condition: Unreachable or TTL equals 0
+        if icmp_type == ICMP_ECHO_UNREACHABLE or icmp_type == ICMP_ECHO_TTL0:
+            return -icmp_type, 0, 0
 
         # Check that the ID matches between the request and reply
         if packet_id == local_id and icmp_type == ICMP_ECHO_REPLY:
@@ -184,6 +190,10 @@ def ping(host, timeout=1, count=4, data_size=64):
     for i in range(count):
         delay, ip_ttl, data_size = do_one_ping(dest_addr, timeout, data_size)
         # Print out the returned delay, TTL, and data size
+        if delay == -3:
+            print("In some cases the destination is unreachable, please check the CODE.")
+        if delay == -11:
+            print("TTL equals 0")
         if delay == -1:
             print("Request timed out.")
         else:
