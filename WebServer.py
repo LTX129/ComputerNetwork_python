@@ -53,6 +53,10 @@ def handle_request(client_socket, addr):
 
         if request_type == 'GET':
             handle_get_request(client_socket, filename)
+        elif request_type == 'HEAD':
+            handle_head_request(client_socket, filename)
+        elif request_type == 'POST':
+            handle_post_request(client_socket, filename, request)
         elif request_type == 'PUT':
             handle_put_request(client_socket, filename, request)
         elif request_type == 'DELETE':
@@ -63,6 +67,65 @@ def handle_request(client_socket, addr):
     finally:
         print("client close")
         client_socket.close()
+
+
+def handle_head_request(client_socket, filename):
+    """
+        Handles a HEAD request from the client.
+
+        Args:
+            client_socket (socket.pyi): The client socket object.
+            filename (str): The name of the file to be handled.
+
+        Returns:
+            None
+        """
+    if filename:
+        try:
+            with open(filename, 'rb') as file:
+                file_content = file.read()
+                mime_type, _ = mimetypes.guess_type(filename)
+                if mime_type is None:
+                    mime_type = 'application/octet-stream'
+
+                response_header = "HTTP/1.1 200 OK\r\n"
+                response_header += f'Content-Type: {mime_type}\r\n'
+                response_header += f'Content-Length: {len(file_content)}\r\n\r\n'
+
+                response = response_header.encode()
+        except FileNotFoundError:
+            response = 'HTTP/1.1 404 Not Found\r\n\r\n'.encode()
+        except Exception:
+            response = 'HTTP/1.1 500 Internal Server Error\r\n\r\n'.encode()
+    else:
+        response = 'HTTP/1.1 400 Bad Request\r\n\r\n'.encode()
+
+    client_socket.sendall(response)
+
+
+def handle_post_request(client_socket, filename, request):
+    """
+        Handles a POST request by writing the content to a file and sending a response.
+
+        Args:
+            client_socket (socket.pyi): The client socket.
+            filename (str): The name of the file to write the content to.
+            request (str): The HTTP request.
+
+        Raises:
+            Exception: If an error occurs while handling the request.
+
+        Returns:
+            None
+        """
+    try:
+        content = request.split('\r\n\r\n', 1)[1]
+        with open(filename, 'wb') as file:
+            file.write(content.encode())
+        response_header = 'HTTP/1.1 201 Created\r\n\r\n'
+        client_socket.sendall(response_header.encode())
+    except Exception:
+        send_error_response(client_socket, error_500)
 
 
 def handle_get_request(client_socket, filename):
