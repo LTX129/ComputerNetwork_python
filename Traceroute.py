@@ -190,4 +190,6 @@ def traceroute(host, max_hops=30, timeout=1):
 
 
 # Example usage
-traceroute("lancaster.ac.uk")
+if __name__ == "__main__":
+    host_str = str(sys.argv[1])
+    traceroute(host_str)

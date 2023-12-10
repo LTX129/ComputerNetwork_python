@@ -223,4 +223,6 @@ def ping(host, timeout=1, count=4, data_size=64):
             min_delay * 1000, max_delay * 1000, avg_delay * 1000))
 
 
-ping("baidu.com")
+if __name__ == "__main__":
+    host_str = str(sys.argv[1])
+    ping(host_str)
