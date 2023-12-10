@@ -16,39 +16,49 @@ def create_server_socket(addr, local_port):
 def handle_request(client_socket):
     # Handle the incoming client request
     request = client_socket.recv(2048).decode()
+
+    # Check if the request is not empty
+    if not request:
+        print("Received empty request")
+        client_socket.close()
+        return
+
     print(f"Request received: {request.splitlines()[0]}")
 
-    # Extract the URL from the GET request
-    url = extract_url(request)
-    if url in cache:
+    # Extract the request type and URL
+    request_type, url = extract_request_type_and_url(request)
+
+    if request_type == 'GET' and url in cache:
         print("Cache hit. Returning cached response.")
         response = cache[url]
     else:
         print("Cache miss. Forwarding request to server.")
-        response = forward_request(url)
-        cache[url] = response
+        response = forward_request(request)
+        if request_type == 'GET':
+            cache[url] = response
 
     client_socket.sendall(response)
     client_socket.close()
 
 
-def extract_url(request):
-    # Extract the URL from the request
+def extract_request_type_and_url(request):
+    # Extract the request type and URL from the request
     lines = request.splitlines()
     if lines:
         first_line = lines[0]
         parts = first_line.split()
-        if len(parts) > 1 and parts[0] == 'GET':
-            return parts[1].strip('/')
+        if len(parts) > 1:
+            return parts[0], parts[1].strip('/')
+    return None, None
 
-
-def forward_request(url):
+def forward_request(full_request):
     # Forward the request to the actual web server and return the response
-    server_socket = socket.create_connection(('', 8000))
-    server_socket.sendall(f'GET /{url} HTTP/1.1\r\nHost: 127.0.0.1\r\n\r\n'.encode())
+    server_socket = socket.create_connection(('127.0.0.1', 8000))  # Adjust as needed
+    server_socket.sendall(full_request.encode())  # Forward the full request
     response = server_socket.recv(4096)
     server_socket.close()
     return response
+
 
 
 def proxy(local_port):
