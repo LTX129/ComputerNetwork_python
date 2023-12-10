@@ -13,18 +13,28 @@ ICMP_ECHO_REPLY = 0  # ICMP type code for echo reply messages
 
 
 def checksum(string):
+    """
+       Calculate the checksum of a string.
+
+       Args:
+           string (str): The input string.
+
+       Returns:
+           int: The calculated checksum.
+
+    """
     csum = 0
     count_to = (len(string) // 2) * 2
     count = 0
 
     while count < count_to:
         this_val = string[count + 1] * 256 + string[count]
-        csum = csum + this_val
+        csum = csum + int(this_val)
         csum = csum & 0xffffffff
         count = count + 2
 
     if count_to < len(string):
-        csum = csum + string[len(string) - 1]
+        csum = csum + int(string[len(string) - 1])
         csum = csum & 0xffffffff
 
     csum = (csum >> 16) + (csum & 0xffff)
@@ -37,13 +47,19 @@ def checksum(string):
 
 
 def receive_one_ping(icmp_socket, local_id, timeout, time_sent):
-    # 1. Wait for the socket to receive a reply
-    # 2. Once received, record time of receipt, otherwise, handle a timeout
-    # 3. Compare the time of receipt to time of sending, producing the total network delay
-    # 4. Unpack the packet header for useful information, including the ID
-    # 5. Check that the ID matches between the request and reply
-    # 6. Return total network delay
+    """
+        Receive a single ICMP ping reply.
 
+        Args:
+            icmp_socket (socket.pyi): The ICMP socket to receive the reply.
+            local_id (int): The ID of the ICMP packet to match with the reply.
+            timeout (float): The maximum time to wait for a reply.
+            time_sent (float): The time when the ICMP packet was sent.
+
+        Returns:
+            tuple: A tuple containing the total network delay, IP TTL, and data size.
+                   If a timeout occurs, returns (-1, 0, 0).
+    """
     time_left = timeout
     while True:
         started_select = time.time()
@@ -62,7 +78,7 @@ def receive_one_ping(icmp_socket, local_id, timeout, time_sent):
         icmp_type, _, _, packet_id, _ = struct.unpack("bbHHh", icmp_header)
 
         # Check that the ID matches between the request and reply
-        if packet_id == local_id and icmp_type == 0:
+        if packet_id == local_id and icmp_type == ICMP_ECHO_REPLY:
             # Calculate the total network delay
             delay = time_received - time_sent
 
@@ -79,13 +95,19 @@ def receive_one_ping(icmp_socket, local_id, timeout, time_sent):
 
 
 def send_one_ping(icmp_socket, destination_address, local_id, data_size):
-    # 1. Build ICMP header
-    # 2. Checksum ICMP packet using given function
-    # 3. Insert checksum into packet
-    # 4. Send packet using socket
-    # 5. Record time of sending
+    """
+        Sends a single ICMP ping packet to the specified destination address.
 
-    # Build the ICMP header
+        Args:
+            icmp_socket (socket.pyi): The ICMP socket used for sending the packet.
+            destination_address (str): The destination IP address or hostname.
+            local_id (int): The local identifier for the ICMP packet.
+            data_size (int): The size of the data payload in the ICMP packet.
+
+        Returns:
+            float: The time of sending the ICMP packet.
+
+    """
     my_checksum = 0
     header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, my_checksum, local_id, 1)
     data = struct.pack("d", time.time()) + b"#" * (data_size - 8)
@@ -110,6 +132,19 @@ def send_one_ping(icmp_socket, destination_address, local_id, data_size):
 
 
 def do_one_ping(destination_address, timeout, data_size):
+    """
+        Perform a single ICMP ping to the specified destination address.
+
+        Args:
+            destination_address (str): The IP address or hostname to ping.
+            timeout (float): The maximum time to wait for a response, in seconds.
+            data_size (int): The size of the data payload to send in the ICMP packet.
+
+        Returns:
+            tuple: A tuple containing the network delay (in milliseconds), the IP time-to-live (TTL),
+                   and the actual data size received in the response.
+
+    """
     # 1. Create ICMP socket
     icmp = socket.getprotobyname('icmp')
     icmp_socket = socket.socket(socket.AF_INET, socket.SOCK_RAW, icmp)
@@ -125,27 +160,29 @@ def do_one_ping(destination_address, timeout, data_size):
 
 
 def ping(host, timeout=1, count=4, data_size=64):
-    # 1. Look up hostname, resolving it to an IP address
-    # 2. Call doOnePing function, approximately every second
-    # 3. Print out the returned delay, TTL, and data size
-    # 4. Continue this process until stopped
+    """
+        Ping a host using ICMP protocol.
 
-    # Look up the hostname and resolve it to an IP address
+        Args:
+            host (str): The hostname or IP address of the target host.
+            timeout (float): The timeout value in seconds for each ping request. Default is 1 second.
+            count (int): The number of ping requests to send. Default is 4.
+            data_size (int): The size of the data payload in each ping request. Default is 64 bytes.
+
+        Returns:
+            None
+
+        Prints out the ping statistics including the delay, TTL, and data size for each ping request.
+    """
     dest_addr = socket.gethostbyname(host)
-
-    # Print out the destination address
     print("Ping " + host + " (" + dest_addr + ") using Python:")
-
-    # Ping for the specified number of times
     sent = 0
     received = 0
     min_delay = float("inf")
     max_delay = 0
     total_delay = 0
     for i in range(count):
-        # Call the doOnePing function
         delay, ip_ttl, data_size = do_one_ping(dest_addr, timeout, data_size)
-
         # Print out the returned delay, TTL, and data size
         if delay == -1:
             print("Request timed out.")
@@ -158,11 +195,7 @@ def ping(host, timeout=1, count=4, data_size=64):
             min_delay = min(min_delay, delay)
             max_delay = max(max_delay, delay)
             total_delay += delay
-
-        # Wait for one second before sending the next ping
         time.sleep(1)
-
-    # Print out the summary
     lost = sent - received
     if sent == 0:
         loss_percent = 0
@@ -180,4 +213,4 @@ def ping(host, timeout=1, count=4, data_size=64):
             min_delay * 1000, max_delay * 1000, avg_delay * 1000))
 
 
-ping("lancaster.ac.uk")
+ping("baidu.com")
