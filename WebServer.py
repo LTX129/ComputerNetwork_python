@@ -105,11 +105,11 @@ def handle_head_request(client_socket, filename):
 
 def handle_post_request(client_socket, filename, request):
     """
-        Handles a POST request by writing the content to a file and sending a response.
+        Handles a POST request by appending the content to a file and sending a response.
 
         Args:
             client_socket (socket.pyi): The client socket.
-            filename (str): The name of the file to write the content to.
+            filename (str): The name of the file to append the content to.
             request (str): The HTTP request.
 
         Raises:
@@ -120,7 +120,7 @@ def handle_post_request(client_socket, filename, request):
         """
     try:
         content = request.split('\r\n\r\n', 1)[1]
-        with open(filename, 'wb') as file:
+        with open(filename, 'ab') as file:
             file.write(content.encode())
         response_header = 'HTTP/1.1 201 Created\r\n\r\n'
         client_socket.sendall(response_header.encode())
@@ -143,11 +143,9 @@ def handle_get_request(client_socket, filename):
         try:
             with open(filename, 'rb') as file:
                 file_content = file.read()
-                # 使用mimetypes库获取文件扩展名对应的MIME类型
                 mime_type, _ = mimetypes.guess_type(filename)
                 if mime_type is None:
-                    mime_type = 'application/octet-stream'  # 默认的二进制流类型
-
+                    mime_type = 'application/octet-stream'
                 response_header = "HTTP/1.1 200 OK\r\n"
                 response_header += f'Content-Type: {mime_type}\r\n'
                 response_header += f'Content-Length: {len(file_content)}\r\n\r\n'
