@@ -45,13 +45,13 @@ def handle_request(client_socket):
     # Extract the request type and URL
     request_type, url = extract_request_type_and_url(request)
 
-    if request_type == 'GET' and url in cache:
+    if request_type in ['GET', 'HEAD'] and url in cache and url in cache:
         print("Cache hit. Returning cached response.")
         response = cache[url]
     else:
         print("Cache miss. Forwarding request to server.")
         response = forward_request(request)
-        if request_type == 'GET':
+        if request_type in ['GET', 'HEAD']:
             cache[url] = response
 
     client_socket.sendall(response)
